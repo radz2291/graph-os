@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "ecommerce-order-flow",
+  "description": "Ecommerce order processing flow with payment, inventory, and notification",
+  "inputs": [],
+  "outputs": [],
+  "nodes": [],
+  "wires": []
+}

@@ -1,0 +1,177 @@
+{
+  "version": "1.0.0",
+  "type": "composite",
+  "name": "habit-tracking",
+  "description": "Habit tracking system with daily check-ins, streak calculation, and progress tracking",
+  "inputs": [
+    "HABIT.CREATE",
+    "HABIT.CHECK_IN",
+    "HABIT.UPDATE"
+  ],
+  "outputs": [
+    "HABIT.CREATED",
+    "HABIT.CHECKED_IN",
+    "HABIT.UPDATED",
+    "HABIT.STREAK_UPDATED"
+  ],
+  "nodes": [
+    {
+      "id": "habit-input",
+      "type": "control.input",
+      "description": "Accept habit creation and check-in requests",
+      "config": {
+        "outputSignalType": "HABIT.CREATE",
+        "fieldName": "name"
+      }
+    },
+    {
+      "id": "habit-validator",
+      "type": "logic.validate",
+      "description": "Validate habit data",
+      "config": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 2
+            },
+            "frequency": {
+              "type": "string",
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ]
+            }
+          }
+        },
+        "successSignalType": "HABIT.VALID",
+        "failureSignalType": "HABIT.INVALID"
+      }
+    },
+    {
+      "id": "habit-enricher",
+      "type": "logic.transform",
+      "description": "Add metadata to habit",
+      "config": {
+        "outputSignalType": "HABIT.ENRICHED",
+        "rules": [
+          {
+            "from": "name",
+            "to": "title",
+            "transform": "trim"
+          },
+          {
+            "from": "frequency",
+            "to": "frequency"
+          }
+        ],
+        "includeUnmatched": true
+      }
+    },
+    {
+      "id": "streak-calculator",
+      "type": "logic.transform",
+      "description": "Calculate current streak based on check-ins",
+      "config": {
+        "outputSignalType": "HABIT.STREAK_UPDATED",
+        "rules": [
+          {
+            "transform": "calculateStreak",
+            "to": "streakCount"
+          }
+        ],
+        "includeUnmatched": true
+      }
+    },
+    {
+      "id": "habit-storage",
+      "type": "infra.storage.local",
+      "description": "Store habits to local storage",
+      "config": {
+        "path": "./data/habits.json",
+        "operation": "append"
+      }
+    },
+    {
+      "id": "success-display",
+      "type": "control.display",
+      "description": "Display success results",
+      "config": {
+        "format": "json",
+        "prefix": "🔄",
+        "showTimestamp": true
+      }
+    },
+    {
+      "id": "error-display",
+      "type": "control.display",
+      "description": "Display validation errors",
+      "config": {
+        "format": "json",
+        "prefix": "❌",
+        "showTimestamp": true
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "habit-input",
+      "to": "habit-validator",
+      "signalType": "HABIT.CREATE"
+    },
+    {
+      "from": "habit-input",
+      "to": "habit-validator",
+      "signalType": "HABIT.CHECK_IN"
+    },
+    {
+      "from": "habit-input",
+      "to": "habit-validator",
+      "signalType": "HABIT.UPDATE"
+    },
+    {
+      "from": "habit-validator",
+      "to": "habit-enricher",
+      "signalType": "HABIT.VALID"
+    },
+    {
+      "from": "habit-validator",
+      "to": "error-display",
+      "signalType": "HABIT.INVALID"
+    },
+    {
+      "from": "habit-enricher",
+      "to": "habit-storage",
+      "signalType": "HABIT.ENRICHED"
+    },
+    {
+      "from": "habit-storage",
+      "to": "streak-calculator",
+      "signalType": "HABIT.CREATED"
+    },
+    {
+      "from": "habit-storage",
+      "to": "streak-calculator",
+      "signalType": "HABIT.CHECKED_IN"
+    },
+    {
+      "from": "streak-calculator",
+      "to": "success-display",
+      "signalType": "HABIT.STREAK_UPDATED"
+    },
+    {
+      "from": "habit-storage",
+      "to": "success-display",
+      "signalType": "HABIT.UPDATED"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-24T21:19:30.526Z",
+    "graphOsVersion": "1.0.0"
+  }
+}

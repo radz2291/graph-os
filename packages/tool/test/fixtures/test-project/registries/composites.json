@@ -1,0 +1,9 @@
+{
+  "composites": [
+    {
+      "name": "test-composite",
+      "description": "Test composite for unit tests",
+      "path": "composites/test-composite.json"
+    }
+  ]
+}

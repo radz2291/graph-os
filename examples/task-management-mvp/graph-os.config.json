@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "cartridge": "cartridges/root.cartridge.json",
+  "signalRegistry": "registries/signal-registry.json",
+  "compositeRegistry": "registries/composite-registry.json",
+  "isomorphic": true,
+  "publicPath": "/"
+}

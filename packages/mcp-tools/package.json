@@ -1,0 +1,46 @@
+{
+  "name": "@graph-os/mcp-tools",
+  "version": "2.0.0",
+  "description": "MCP Tools for Graph-OS - AI development tools (v2.0.0 - The Molecular Layer)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@graph-os/core": "file:../core",
+    "@graph-os/runtime": "file:../runtime",
+    "@graph-os/validators": "file:../validators",
+    "@graph-os/testing": "file:../testing"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graph-os/graph-os.git",
+    "directory": "packages/mcp-tools"
+  },
+  "keywords": [
+    "graph-os",
+    "mcp",
+    "ai",
+    "tools",
+    "model-context-protocol",
+    "molecular-layer"
+  ],
+  "author": "Graph-OS Team",
+  "license": "MIT"
+}

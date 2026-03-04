@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "type": "composite",
+  "name": "task-validation-pipeline",
+  "description": "Reusable task validation pipeline with input validation, transformation, and error handling",
+  "inputs": [
+    "TASK.SUBMIT"
+  ],
+  "outputs": [
+    "TASK.VALIDATED",
+    "TASK.REJECTED"
+  ],
+  "nodes": [
+    {
+      "id": "input-validator",
+      "type": "logic.validate",
+      "description": "Validate incoming task data",
+      "config": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "title",
+            "description"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 3
+            },
+            "description": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "successSignalType": "TASK.FORMAT_VALID",
+        "failureSignalType": "TASK.FORMAT_INVALID"
+      }
+    },
+    {
+      "id": "content-filter",
+      "type": "logic.transform",
+      "description": "Filter and sanitize task content",
+      "config": {
+        "outputSignalType": "TASK.VALIDATED",
+        "rules": [
+          {
+            "from": "title",
+            "to": "sanitizedTitle",
+            "transform": "trim"
+          },
+          {
+            "from": "description",
+            "to": "sanitizedDescription",
+            "transform": "trim"
+          }
+        ]
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "input-validator",
+      "to": "content-filter",
+      "signalType": "TASK.FORMAT_VALID"
+    },
+    {
+      "from": "input-validator",
+      "to": "error-handler",
+      "signalType": "TASK.FORMAT_INVALID"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-24T21:15:05.244Z",
+    "graphOsVersion": "1.0.0"
+  }
+}

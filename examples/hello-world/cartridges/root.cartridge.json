@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "name": "hello-world",
+  "description": "Simple hello world cartridge demonstrating basic Graph-OS concepts",
+  "inputs": [],
+  "outputs": [],
+  "nodes": [
+    {
+      "id": "input",
+      "type": "control.input",
+      "description": "Accept user name input",
+      "config": {
+        "prompt": "What is your name? ",
+        "outputSignalType": "USER.NAME_ENTERED",
+        "fieldName": "name"
+      }
+    },
+    {
+      "id": "transform",
+      "type": "logic.transform",
+      "description": "Create greeting message",
+      "config": {
+        "outputSignalType": "GREETING.CREATED",
+        "rules": [
+          { "from": "name", "to": "userName", "transform": "trim" }
+        ],
+        "includeUnmatched": false
+      }
+    },
+    {
+      "id": "display",
+      "type": "control.display",
+      "description": "Display greeting",
+      "config": {
+        "format": "text",
+        "prefix": "👋 Hello",
+        "showTimestamp": false,
+        "field": "userName"
+      }
+    }
+  ],
+  "wires": [
+    { "from": "input", "to": "transform", "signalType": "USER.NAME_ENTERED" },
+    { "from": "transform", "to": "display", "signalType": "GREETING.CREATED" }
+  ]
+}

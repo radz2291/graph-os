@@ -1,0 +1,46 @@
+{
+  "name": "@graph-os/runtime",
+  "version": "1.0.0",
+  "description": "Runtime execution engine for Graph-OS platform",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "graph-os",
+    "runtime",
+    "node-based",
+    "signal-driven",
+    "execution-engine"
+  ],
+  "author": "Graph-OS Team",
+  "license": "MIT",
+  "dependencies": {
+    "@graph-os/core": "file:../core"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graph-os/graph-os.git",
+    "directory": "packages/runtime"
+  }
+}

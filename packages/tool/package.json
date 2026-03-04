@@ -1,0 +1,74 @@
+{
+  "name": "@graph-os/tool",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Graph-OS MCP Tools v2 - Minimal AI interface for graph manipulation (5 tools: use, query, patch, run, generate)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "graph-os-tool": "./dist/bin/server.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/core/index.js",
+      "types": "./dist/core/index.d.ts"
+    },
+    "./tools": {
+      "import": "./dist/tools/index.js",
+      "types": "./dist/tools/index.d.ts"
+    },
+    "./servers": {
+      "import": "./dist/servers/index.js",
+      "types": "./dist/servers/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage",
+    "lint": "eslint src --ext .ts",
+    "prepublishOnly": "npm run clean && npm run build && npm run test"
+  },
+  "dependencies": {
+    "@graph-os/core": "file:../core",
+    "@graph-os/runtime": "file:../runtime",
+    "@graph-os/validators": "file:../validators",
+    "fast-json-patch": "^3.1.1",
+    "ajv": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/bun": "^1.0.0",
+    "typescript": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graph-os/graph-os.git",
+    "directory": "packages/tool"
+  },
+  "keywords": [
+    "graph-os",
+    "mcp",
+    "ai",
+    "tools",
+    "model-context-protocol",
+    "signal-driven",
+    "node-based"
+  ],
+  "author": "Graph-OS Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

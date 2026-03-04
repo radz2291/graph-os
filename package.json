@@ -1,0 +1,42 @@
+{
+  "name": "graph-os",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Graph-OS - Node-based, Signal-driven Architecture Platform for AI-Driven Development",
+  "workspaces": [
+    "packages/core",
+    "packages/runtime",
+    "packages/validators",
+    "packages/testing",
+    "packages/mcp-tools",
+    "packages/react-bridge",
+    "packages/tool"
+  ],
+  "scripts": {
+    "build": "npm run build:core && npm run build:runtime && npm run build:validators && npm run build:testing && npm run build:mcp-tools && npm run build:react-bridge && npm run build:tool",
+    "build:core": "cd packages/core && npm run build",
+    "build:runtime": "cd packages/runtime && npm run build",
+    "build:validators": "cd packages/validators && npm run build",
+    "build:testing": "cd packages/testing && npm run build",
+    "build:mcp-tools": "cd packages/mcp-tools && npm run build",
+    "build:react-bridge": "cd packages/react-bridge && npm run build",
+    "build:tool": "cd packages/tool && npm run build",
+    "clean": "npm run clean:core && npm run clean:runtime && npm run clean:validators && npm run clean:testing && npm run clean:mcp-tools && npm run clean:react-bridge && npm run clean:tool",
+    "clean:core": "cd packages/core && npm run clean",
+    "clean:runtime": "cd packages/runtime && npm run clean",
+    "clean:validators": "cd packages/validators && npm run clean",
+    "clean:testing": "cd packages/testing && npm run clean",
+    "clean:mcp-tools": "cd packages/mcp-tools && npm run clean",
+    "clean:react-bridge": "cd packages/react-bridge && npm run clean",
+    "clean:tool": "cd packages/tool && npm run clean"
+  },
+  "keywords": [
+    "graph-os",
+    "mcp",
+    "ai",
+    "signal-driven",
+    "node-based"
+  ],
+  "author": "Graph-OS Team",
+  "license": "MIT"
+}

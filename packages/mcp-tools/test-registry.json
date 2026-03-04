@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "DATA.FETCHED",
+      "payloadSchema": {}
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "TASK.CREATE",
+      "namespace": "TASK",
+      "action": "CREATE",
+      "description": "Emitted when user creates a new task",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "description"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:13:58.712Z"
+    },
+    {
+      "type": "TASK.VALID",
+      "namespace": "TASK",
+      "action": "VALID",
+      "description": "Emitted when task validation passes",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:13:58.902Z"
+    },
+    {
+      "type": "TASK.INVALID",
+      "namespace": "TASK",
+      "action": "INVALID",
+      "description": "Emitted when task validation fails",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:13:59.091Z"
+    },
+    {
+      "type": "TASK.ENRICHED",
+      "namespace": "TASK",
+      "action": "ENRICHED",
+      "description": "Emitted when task is enriched with metadata",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "logic.router"
+      ],
+      "registeredAt": "2026-02-24T21:13:59.280Z"
+    },
+    {
+      "type": "TASK.HIGH_PRIORITY",
+      "namespace": "TASK",
+      "action": "HIGH_PRIORITY",
+      "description": "Emitted for high priority tasks",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.router"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:13:59.488Z"
+    },
+    {
+      "type": "TASK.URGENT_PRIORITY",
+      "namespace": "TASK",
+      "action": "URGENT_PRIORITY",
+      "description": "Emitted for urgent priority tasks",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.router"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:14:03.119Z"
+    },
+    {
+      "type": "TASK.NORMAL_PRIORITY",
+      "namespace": "TASK",
+      "action": "NORMAL_PRIORITY",
+      "description": "Emitted for normal priority tasks",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.router"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:14:03.311Z"
+    }
+  ]
+}

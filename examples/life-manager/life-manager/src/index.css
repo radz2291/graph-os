@@ -1,0 +1,39 @@
+.app { padding: 20px; font-family: system-ui, sans-serif; background: #f5f5f5; min-height: 100vh; }
+.app-header { text-align: center; margin-bottom: 30px; }
+.app-header h1 { margin: 0; color: #1a1a1a; }
+.app-header p { color: #666; margin-top: 8px; }
+.app-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+.app-nav button { padding: 12px 24px; border: 2px solid #e5e5e5; background: white; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+.app-nav button.active { border-color: #3b82f6; color: #3b82f6; background: #eff6ff; }
+.view { display: flex; gap: 30px; align-items: flex-start; }
+.form-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); min-width: 300px; }
+.form-card h2 { margin: 0 0 20px; font-size: 20px; }
+.input-field, .textarea-field { width: 100%; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; margin-bottom: 16px; font-size: 14px; box-sizing: border-box; }
+.priority-selector { display: flex; gap: 8px; margin-bottom: 16px; }
+.priority-btn { flex: 1; padding: 8px; border: 1px solid #e5e5e5; border-radius: 6px; background: white; cursor: pointer; transition: all 0.2s; }
+.priority-btn.active { border-color: #3b82f6; color: #3b82f6; background: #eff6ff; }
+.submit-btn { width: 100%; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+.submit-btn:hover { background: #2563eb; }
+.list-section { flex: 1; background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.list-section h3 { margin: 0 0 16px; color: #666; font-size: 16px; }
+.card { background: #f9fafb; padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid #3b82f6; }
+.card.completed { opacity: 0.6; }
+.card h4 { margin: 0 0 8px; color: #1a1a1a; }
+.card h4.completed-text { text-decoration: line-through; }
+.description { margin: 8px 0; color: #666; font-size: 14px; }
+.card-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+.priority-badge, .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; color: white; }
+.timestamp { font-size: 12px; color: #999; }
+.card-actions { display: flex; gap: 8px; margin-top: 12px; }
+.toggle-btn { flex: 1; padding: 8px; border: 1px solid #3b82f6; background: white; color: #3b82f6; border-radius: 6px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+.toggle-btn:hover { background: #eff6ff; }
+.delete-btn { padding: 8px 16px; border: 1px solid #ef4444; background: white; color: #ef4444; border-radius: 6px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+.delete-btn:hover { background: #fef2f2; }
+.streak-display { color: #f59e0b; font-weight: 600; margin-top: 8px; }
+.goal-deadline { font-size: 14px; color: #666; margin: 8px 0; }
+.progress-bar { height: 8px; background: #e5e5e5; border-radius: 4px; overflow: hidden; margin: 12px 0; }
+.progress-fill { height: 100%; background: #10b981; transition: width 0.3s; }
+.goal-stats { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+.achieved-badge { background: #10b981; color: white; padding: 8px; border-radius: 6px; text-align: center; font-weight: 600; margin-top: 12px; }
+.error-message { background: #fef2f2; border: 1px solid #ef4444; color: #ef4444; padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+.loading { text-align: center; padding: 40px; color: #666; }

@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "name": "auth-cartridge",
+  "description": "Authentication flow cartridge for integration tests",
+  "inputs": [
+    {
+      "name": "loginRequest",
+      "signalType": "AUTH.LOGIN",
+      "description": "Login request with credentials"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "authSuccess",
+      "signalType": "AUTH.SUCCESS",
+      "description": "Successful authentication"
+    },
+    {
+      "name": "authFailure",
+      "signalType": "AUTH.FAILURE",
+      "description": "Failed authentication"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "login-form",
+      "type": "control.input",
+      "description": "Login form submission",
+      "config": {
+        "outputSignalType": "AUTH.LOGIN"
+      }
+    },
+    {
+      "id": "auth-validator",
+      "type": "logic.validate",
+      "description": "Validate credentials",
+      "config": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string", "format": "email" },
+            "password": { "type": "string", "minLength": 8 }
+          },
+          "required": ["email", "password"]
+        },
+        "successSignalType": "AUTH.SUCCESS",
+        "failureSignalType": "AUTH.FAILURE"
+      }
+    },
+    {
+      "id": "dashboard-loader",
+      "type": "logic.transform",
+      "description": "Load dashboard data",
+      "config": {
+        "outputSignalType": "DATA.LOADED"
+      }
+    },
+    {
+      "id": "error-display",
+      "type": "control.display",
+      "description": "Display error message",
+      "config": {
+        "format": "error"
+      }
+    }
+  ],
+  "wires": [
+    { "from": "login-form", "to": "auth-validator", "signalType": "AUTH.LOGIN" },
+    { "from": "auth-validator", "to": "dashboard-loader", "signalType": "AUTH.SUCCESS" },
+    { "from": "auth-validator", "to": "error-display", "signalType": "AUTH.FAILURE" }
+  ]
+}

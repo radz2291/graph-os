@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "name": "parent",
+  "nodes": [
+    {
+      "id": "keep-1",
+      "type": "control.input",
+      "config": {}
+    },
+    {
+      "id": "keep-2",
+      "type": "control.output",
+      "config": {}
+    },
+    {
+      "id": "composite-logic-processor",
+      "type": "ui.composite",
+      "config": {
+        "ref": "C:\\Users\\RZ1\\Documents\\Development\\260220-Graph-OS-Studio-5th\\packages\\mcp-tools\\test-composite.json",
+        "inputs": [
+          "DATA.IN"
+        ],
+        "outputs": [
+          "DATA.OUT"
+        ]
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "keep-1",
+      "to": "keep-2",
+      "signalType": "DATA.DIRECT"
+    },
+    {
+      "from": "keep-1",
+      "to": "composite-logic-processor",
+      "signalType": "DATA.IN"
+    },
+    {
+      "from": "composite-logic-processor",
+      "to": "keep-2",
+      "signalType": "DATA.OUT"
+    }
+  ]
+}

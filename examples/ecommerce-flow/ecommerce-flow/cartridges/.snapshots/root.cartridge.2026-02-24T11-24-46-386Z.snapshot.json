@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "name": "ecommerce-order-flow",
+  "description": "Ecommerce order processing flow with payment, inventory, and notification",
+  "nodes": [
+    {
+      "id": "order-input",
+      "type": "control.input",
+      "description": "Order input",
+      "config": {
+        "outputSignalType": "ORDER.CREATED"
+      }
+    },
+    {
+      "id": "order-validator",
+      "type": "logic.validate",
+      "description": "Validate order",
+      "config": {
+        "schema": {
+          "type": "object"
+        },
+        "successSignalType": "ORDER.VALIDATED",
+        "failureSignalType": "ORDER.INVALID"
+      }
+    },
+    {
+      "id": "payment-processor",
+      "type": "logic.transform",
+      "description": "Process payment",
+      "config": {
+        "outputSignalType": "PAYMENT.REQUESTED"
+      }
+    },
+    {
+      "id": "payment-api",
+      "type": "infra.api",
+      "description": "Payment API client",
+      "config": {
+        "endpoint": "/api/payments"
+      }
+    },
+    {
+      "id": "inventory-checker",
+      "type": "infra.storage",
+      "description": "Check inventory",
+      "config": {
+        "outputSignalType": "INVENTORY.RESERVED"
+      }
+    },
+    {
+      "id": "order-finalizer",
+      "type": "logic.transform",
+      "description": "Finalize order",
+      "config": {
+        "outputSignalType": "ORDER.COMPLETED"
+      }
+    },
+    {
+      "id": "notification-sender",
+      "type": "io.notification",
+      "description": "Send notifications",
+      "config": {
+        "outputSignalType": "NOTIFICATION.SENT"
+      }
+    },
+    {
+      "id": "error-display",
+      "type": "control.display",
+      "description": "Display errors",
+      "config": {
+        "format": "json"
+      }
+    },
+    {
+      "id": "success-display",
+      "type": "control.display",
+      "description": "Display success",
+      "config": {
+        "format": "json"
+      }
+    }
+  ],
+  "wires": [],
+  "inputs": [],
+  "outputs": []
+}

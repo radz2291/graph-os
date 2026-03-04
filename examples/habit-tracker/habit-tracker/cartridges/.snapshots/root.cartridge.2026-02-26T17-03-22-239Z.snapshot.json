@@ -1,0 +1,54 @@
+{
+    "version": "1.0.0",
+    "name": "habit-tracker",
+    "description": "Habit tracker application with React + Graph-OS backend using signal-first architecture",
+    "inputs": [],
+    "outputs": [],
+    "nodes": [
+        {
+            "id": "input",
+            "type": "control.input",
+            "description": "User input handler",
+            "config": {
+                "prompt": "Enter input: ",
+                "outputSignalType": "INPUT.SUBMITTED"
+            }
+        },
+        {
+            "id": "transform",
+            "type": "logic.transform",
+            "description": "Transform input",
+            "config": {
+                "outputSignalType": "DATA.TRANSFORMED",
+                "rules": [
+                    {
+                        "from": "value",
+                        "to": "transformedValue",
+                        "transform": "uppercase"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "display",
+            "type": "control.display",
+            "description": "Display output",
+            "config": {
+                "format": "json",
+                "showTimestamp": true
+            }
+        }
+    ],
+    "wires": [
+        {
+            "from": "input",
+            "to": "transform",
+            "signalType": "INPUT.SUBMITTED"
+        },
+        {
+            "from": "transform",
+            "to": "display",
+            "signalType": "DATA.TRANSFORMED"
+        }
+    ]
+}

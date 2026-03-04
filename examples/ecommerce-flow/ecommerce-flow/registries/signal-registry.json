@@ -1,0 +1,145 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "ORDER.CREATED",
+      "namespace": "ORDER",
+      "action": "CREATED",
+      "description": "New order submitted",
+      "payloadSchema": {},
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.375Z"
+    },
+    {
+      "type": "ORDER.VALIDATED",
+      "namespace": "ORDER",
+      "action": "VALIDATED",
+      "description": "Order validated successfully",
+      "payloadSchema": {},
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.375Z"
+    },
+    {
+      "type": "ORDER.INVALID",
+      "namespace": "ORDER",
+      "action": "INVALID",
+      "description": "Order validation failed",
+      "payloadSchema": {},
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.376Z"
+    },
+    {
+      "type": "PAYMENT.REQUESTED",
+      "namespace": "PAYMENT",
+      "action": "REQUESTED",
+      "description": "Payment processing requested",
+      "payloadSchema": {},
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "infra.api"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.376Z"
+    },
+    {
+      "type": "PAYMENT.SUCCESS",
+      "namespace": "PAYMENT",
+      "action": "SUCCESS",
+      "description": "Payment successful",
+      "payloadSchema": {},
+      "emittedBy": [
+        "infra.api"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.377Z"
+    },
+    {
+      "type": "PAYMENT.FAILED",
+      "namespace": "PAYMENT",
+      "action": "FAILED",
+      "description": "Payment failed",
+      "payloadSchema": {},
+      "emittedBy": [
+        "infra.api"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.378Z"
+    },
+    {
+      "type": "INVENTORY.RESERVED",
+      "namespace": "INVENTORY",
+      "action": "RESERVED",
+      "description": "Inventory reserved",
+      "payloadSchema": {},
+      "emittedBy": [
+        "infra.storage"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.378Z"
+    },
+    {
+      "type": "INVENTORY.FAILED",
+      "namespace": "INVENTORY",
+      "action": "FAILED",
+      "description": "Inventory reservation failed",
+      "payloadSchema": {},
+      "emittedBy": [
+        "infra.storage"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.378Z"
+    },
+    {
+      "type": "NOTIFICATION.SENT",
+      "namespace": "NOTIFICATION",
+      "action": "SENT",
+      "description": "Notification sent",
+      "payloadSchema": {},
+      "emittedBy": [
+        "io.notification"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.378Z"
+    },
+    {
+      "type": "ORDER.COMPLETED",
+      "namespace": "ORDER",
+      "action": "COMPLETED",
+      "description": "Order completed",
+      "payloadSchema": {},
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T11:24:46.378Z"
+    }
+  ]
+}

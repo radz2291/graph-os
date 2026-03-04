@@ -1,0 +1,23 @@
+{
+  "name": "@graph-os/standards",
+  "version": "1.0.0",
+  "description": "Architecture standards and documentation for Graph-OS platform",
+  "main": "index.js",
+  "files": [
+    "README.md",
+    "docs"
+  ],
+  "keywords": [
+    "graph-os",
+    "standards",
+    "documentation",
+    "architecture"
+  ],
+  "author": "Graph-OS Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graph-os/graph-os.git",
+    "directory": "packages/standards"
+  }
+}

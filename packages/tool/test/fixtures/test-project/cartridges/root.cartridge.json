@@ -1,0 +1,304 @@
+{
+  "version": "1.0.0",
+  "name": "test-cartridge",
+  "description": "Test cartridge for unit tests",
+  "inputs": [
+    {
+      "name": "testInput",
+      "signalType": "TEST.INPUT",
+      "description": "Test input signal"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "testOutput",
+      "signalType": "TEST.OUTPUT",
+      "description": "Test output signal"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "move-test-node",
+      "type": "control.input",
+      "name": "Move Test Node"
+    },
+    {
+      "id": "validator-node",
+      "type": "logic.validate",
+      "description": "Test validator",
+      "config": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        "successSignalType": "TEST.VALID",
+        "failureSignalType": "TEST.INVALID"
+      }
+    },
+    {
+      "id": "transform-node",
+      "type": "logic.transform",
+      "description": "Test transformer",
+      "config": {
+        "outputSignalType": "TEST.OUTPUT",
+        "rules": []
+      }
+    },
+    {
+      "id": "output-node",
+      "type": "control.display",
+      "description": "Test output node",
+      "config": {
+        "format": "json"
+      }
+    },
+    {
+      "id": "signup-input",
+      "type": "control.input",
+      "description": "Receive signup data",
+      "config": {
+        "outputSignalType": "USER.SIGNUP"
+      }
+    },
+    {
+      "id": "email-validator",
+      "type": "logic.validate",
+      "description": "Validate email format",
+      "config": {
+        "schema": "email"
+      }
+    },
+    {
+      "id": "input-node-2",
+      "type": "control.input",
+      "description": "Test input node",
+      "config": {
+        "schema": "updated-schema",
+        "strict": true
+      }
+    },
+    {
+      "id": "create-user",
+      "type": "external.database",
+      "description": "Create user account",
+      "config": {
+        "operation": "create"
+      }
+    },
+    {
+      "id": "response-output",
+      "type": "control.output",
+      "description": "Send response",
+      "config": {}
+    },
+    {
+      "id": "new-node",
+      "type": "logic.transform",
+      "config": {}
+    },
+    {
+      "id": "test-node-1",
+      "type": "logic.transform",
+      "config": {}
+    },
+    {
+      "id": "input-node",
+      "type": "control.input",
+      "description": "Test input node",
+      "config": {
+        "schema": "updated-schema",
+        "strict": true
+      }
+    },
+    {
+      "id": "checkpoint-test-node",
+      "type": "logic.transform",
+      "config": {}
+    },
+    {
+      "id": "test-node-2",
+      "type": "logic.transform",
+      "config": {}
+    },
+    {
+      "id": "copy-test-node",
+      "type": "control.input",
+      "name": "Copy Test Node"
+    },
+    {
+      "id": "explain-test-node",
+      "type": "logic.transform",
+      "name": "Explain Test"
+    },
+    {
+      "id": "checkpoint-test-node-2",
+      "type": "control.input",
+      "name": "Checkpoint Test"
+    },
+    {
+      "id": "test-invalid",
+      "type": "invalid.type"
+    },
+    {
+      "id": "fix-test-node",
+      "type": "logic.transform",
+      "name": "Fix Test Node"
+    },
+    {
+      "id": "id-test-node",
+      "type": "logic.transform",
+      "name": "Updated By ID"
+    },
+    {
+      "id": "test-checkpoint-node",
+      "type": "logic.test",
+      "config": {}
+    },
+    {
+      "id": "move-source",
+      "type": "logic.test",
+      "config": {
+        "original": true
+      }
+    },
+    {
+      "id": "w1-input",
+      "type": "control.input",
+      "description": "User registration input",
+      "config": {
+        "outputSignalType": "USER.REGISTER"
+      }
+    },
+    {
+      "id": "w1-validate-email",
+      "type": "logic.validate",
+      "description": "Validate email format",
+      "config": {
+        "schema": "email"
+      }
+    },
+    {
+      "id": "w1-validate-password",
+      "type": "logic.validate",
+      "description": "Validate password strength",
+      "config": {
+        "minLength": 8
+      }
+    },
+    {
+      "id": "w1-create-user",
+      "type": "external.database",
+      "description": "Create user in database",
+      "config": {
+        "operation": "insert"
+      }
+    },
+    {
+      "id": "w1-send-email",
+      "type": "external.email",
+      "description": "Send welcome email",
+      "config": {
+        "template": "welcome"
+      }
+    },
+    {
+      "id": "w1-output",
+      "type": "control.output",
+      "description": "Return registration result",
+      "config": {}
+    },
+    {
+      "id": "data-input",
+      "type": "control.input",
+      "description": "Data input source",
+      "config": {
+        "outputSignalType": "DATA.INPUT"
+      }
+    },
+    {
+      "id": "data-pipeline",
+      "type": "pipeline.data",
+      "description": "Main processing pipeline",
+      "config": {
+        "stages": [
+          "extract",
+          "transform",
+          "load"
+        ],
+        "parallel": false
+      }
+    },
+    {
+      "id": "data-output",
+      "type": "control.output",
+      "description": "Processed data output",
+      "config": {}
+    },
+    {
+      "id": "schema-validator",
+      "type": "validate.schema",
+      "description": "Validate input schema",
+      "config": {
+        "strict": true
+      }
+    },
+    {
+      "id": "test-valid",
+      "type": "logic.transform"
+    },
+    {
+      "id": "recovery-test-1",
+      "type": "logic.transform"
+    },
+    {
+      "id": "recovery-test-2",
+      "type": "logic.transform"
+    }
+  ],
+  "wires": [
+    {
+      "from": "input-node",
+      "to": "validator-node",
+      "signalType": "TEST.INPUT"
+    },
+    {
+      "from": "validator-node",
+      "to": "transform-node",
+      "signalType": "TEST.VALID"
+    },
+    {
+      "from": "transform-node",
+      "to": "output-node",
+      "signalType": "TEST.OUTPUT"
+    },
+    {
+      "from": "data-input",
+      "to": "data-pipeline",
+      "signalType": "DATA.INPUT"
+    },
+    {
+      "from": "data-pipeline",
+      "to": "data-output",
+      "signalType": "DATA.OUTPUT"
+    },
+    {
+      "from": "data-input",
+      "to": "schema-validator",
+      "signalType": "DATA.INPUT"
+    },
+    {
+      "from": "schema-validator",
+      "to": "data-pipeline",
+      "signalType": "DATA.VALID"
+    },
+    {
+      "from": "recovery-test-1",
+      "to": "recovery-test-2",
+      "signalType": "TEST.RECOVERY"
+    }
+  ]
+}

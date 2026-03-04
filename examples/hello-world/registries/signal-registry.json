@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "USER.NAME_ENTERED",
+      "namespace": "USER",
+      "action": "NAME_ENTERED",
+      "description": "Emitted when user enters their name",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"]
+      },
+      "emittedBy": ["control.input"],
+      "consumedBy": ["logic.transform"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "GREETING.CREATED",
+      "namespace": "GREETING",
+      "action": "CREATED",
+      "description": "Emitted when a greeting is created",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "userName": { "type": "string" }
+        }
+      },
+      "emittedBy": ["logic.transform"],
+      "consumedBy": ["control.display"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}

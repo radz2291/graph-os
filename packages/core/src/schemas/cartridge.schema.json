@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-os.com/schemas/cartridge.schema.json",
+  "title": "Graph-OS Cartridge",
+  "description": "Schema for Graph-OS cartridge definition files",
+  "type": "object",
+  "required": [
+    "version",
+    "name",
+    "description",
+    "nodes",
+    "wires"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Cartridge format version (semver)"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Cartridge name (kebab-case)"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "description": "Human-readable description"
+    },
+    "inputs": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/definitions/portDefinition"
+      },
+      "description": "Input ports for the cartridge"
+    },
+    "outputs": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/definitions/portDefinition"
+      },
+      "description": "Output ports for the cartridge"
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "items": {
+        "$ref": "#/definitions/nodeDefinition"
+      },
+      "description": "Node definitions"
+    },
+    "wires": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "$ref": "#/definitions/wireDefinition"
+      },
+      "description": "Wire connections between nodes"
+    }
+  },
+  "definitions": {
+    "portDefinition": {
+      "type": "object",
+      "required": [
+        "name",
+        "signalType",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Port name (snake_case)"
+        },
+        "signalType": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*\\.[A-Z][A-Z0-9_]*$",
+          "description": "Signal type (NAMESPACE.ACTION)"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Port description"
+        }
+      }
+    },
+    "nodeDefinition": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "description",
+        "config"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Unique node identifier (kebab-case)"
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*\\.[a-z][a-z0-9.-]*$",
+          "description": "Node type (category.subtype)"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Node description"
+        },
+        "config": {
+          "type": "object",
+          "description": "Node-specific configuration"
+        }
+      }
+    },
+    "wireDefinition": {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "signalType"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Source node ID"
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Target node ID"
+        },
+        "signalType": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*\\.[A-Z][A-Z0-9_]*$",
+          "description": "Signal type to route"
+        }
+      }
+    }
+  }
+}

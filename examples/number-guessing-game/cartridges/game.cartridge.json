@@ -1,0 +1,118 @@
+{
+  "version": "1.0.0",
+  "name": "number-guessing-game",
+  "description": "A simple number guessing game built with Graph-OS signal-driven architecture",
+  "inputs": [
+    {
+      "name": "startGame",
+      "signalType": "GAME.START",
+      "description": "Start a new game"
+    },
+    {
+      "name": "makeGuess",
+      "signalType": "GAME.GUESS",
+      "description": "Submit a guess"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "gameStarted",
+      "signalType": "GAME.STARTED",
+      "description": "Game has started with a new target number"
+    },
+    {
+      "name": "guessResult",
+      "signalType": "GAME.GUESS_RESULT",
+      "description": "Result of the guess (too high, too low, correct)"
+    },
+    {
+      "name": "gameWon",
+      "signalType": "GAME.WON",
+      "description": "Player has won the game"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "game-state",
+      "type": "game.state",
+      "description": "Manages game state and target number",
+      "config": {
+        "minNumber": 1,
+        "maxNumber": 100,
+        "maxAttempts": 10
+      }
+    },
+    {
+      "id": "guess-validator",
+      "type": "logic.validate",
+      "description": "Validates guess input",
+      "config": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "guess": { "type": "number", "minimum": 1, "maximum": 100 }
+          },
+          "required": ["guess"]
+        },
+        "successSignalType": "GUESS.VALID",
+        "failureSignalType": "GUESS.INVALID"
+      }
+    },
+    {
+      "id": "guess-comparator",
+      "type": "game.comparator",
+      "description": "Compares guess to target number",
+      "config": {}
+    },
+    {
+      "id": "score-calculator",
+      "type": "game.score",
+      "description": "Calculates score based on attempts",
+      "config": {
+        "baseScore": 1000,
+        "penaltyPerAttempt": 50
+      }
+    },
+    {
+      "id": "display",
+      "type": "control.display",
+      "description": "Display game messages",
+      "config": {
+        "format": "text",
+        "showTimestamp": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "game-state",
+      "to": "display",
+      "signalType": "GAME.STARTED"
+    },
+    {
+      "from": "guess-validator",
+      "to": "guess-comparator",
+      "signalType": "GUESS.VALID"
+    },
+    {
+      "from": "guess-validator",
+      "to": "display",
+      "signalType": "GUESS.INVALID"
+    },
+    {
+      "from": "guess-comparator",
+      "to": "display",
+      "signalType": "GAME.GUESS_RESULT"
+    },
+    {
+      "from": "guess-comparator",
+      "to": "score-calculator",
+      "signalType": "GAME.WON"
+    },
+    {
+      "from": "score-calculator",
+      "to": "display",
+      "signalType": "SCORE.CALCULATED"
+    }
+  ]
+}

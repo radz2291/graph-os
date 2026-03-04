@@ -1,0 +1,131 @@
+{
+  "version": "1.0.0",
+  "name": "life-manager",
+  "description": "Root cartridge for life-manager - A comprehensive life management application with tasks, habits, goals, and journaling",
+  "inputs": [],
+  "outputs": [],
+  "nodes": [
+    {
+      "id": "login-input",
+      "type": "control.input",
+      "description": "Entry point for login requests",
+      "config": {
+        "outputSignalType": "AUTH.LOGIN_REQUEST"
+      }
+    },
+    {
+      "id": "email-validator",
+      "type": "logic.validate",
+      "description": "Validates email format",
+      "config": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "required": [
+            "email"
+          ]
+        },
+        "successSignalType": "VALIDATION.EMAIL_OK",
+        "failureSignalType": "VALIDATION.EMAIL_ERROR"
+      }
+    },
+    {
+      "id": "password-validator",
+      "type": "logic.validate",
+      "description": "Validates password strength",
+      "config": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string",
+              "minLength": 8
+            }
+          },
+          "required": [
+            "password"
+          ]
+        },
+        "successSignalType": "VALIDATION.PASSWORD_OK",
+        "failureSignalType": "VALIDATION.PASSWORD_ERROR"
+      }
+    },
+    {
+      "id": "auth-transform",
+      "type": "logic.transform",
+      "description": "Transforms validated input to auth request",
+      "config": {
+        "outputSignalType": "AUTH.SUCCESS",
+        "rules": [
+          {
+            "from": "email",
+            "to": "email"
+          },
+          {
+            "from": "password",
+            "to": "token",
+            "transform": "hash"
+          }
+        ]
+      }
+    },
+    {
+      "id": "success-output",
+      "type": "control.display",
+      "description": "Display success result",
+      "config": {
+        "format": "json"
+      }
+    },
+    {
+      "id": "error-output",
+      "type": "control.display",
+      "description": "Display error result",
+      "config": {
+        "format": "json"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "login-input",
+      "to": "email-validator",
+      "signalType": "AUTH.LOGIN_REQUEST"
+    },
+    {
+      "from": "login-input",
+      "to": "password-validator",
+      "signalType": "AUTH.LOGIN_REQUEST"
+    },
+    {
+      "from": "email-validator",
+      "to": "auth-transform",
+      "signalType": "VALIDATION.EMAIL_OK"
+    },
+    {
+      "from": "password-validator",
+      "to": "auth-transform",
+      "signalType": "VALIDATION.PASSWORD_OK"
+    },
+    {
+      "from": "auth-transform",
+      "to": "success-output",
+      "signalType": "AUTH.SUCCESS"
+    },
+    {
+      "from": "email-validator",
+      "to": "error-output",
+      "signalType": "VALIDATION.EMAIL_ERROR"
+    },
+    {
+      "from": "password-validator",
+      "to": "error-output",
+      "signalType": "VALIDATION.PASSWORD_ERROR"
+    }
+  ]
+}

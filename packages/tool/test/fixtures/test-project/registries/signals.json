@@ -1,0 +1,44 @@
+{
+  "signals": [
+    {
+      "type": "TEST.INPUT",
+      "description": "Test input signal",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "value": { "type": "string" }
+        }
+      }
+    },
+    {
+      "type": "TEST.OUTPUT",
+      "description": "Test output signal"
+    },
+    {
+      "type": "TEST.VALID",
+      "description": "Test validation success"
+    },
+    {
+      "type": "TEST.INVALID",
+      "description": "Test validation failure"
+    },
+    {
+      "type": "AUTH.LOGIN",
+      "description": "Login request",
+      "emittedBy": ["login-form"],
+      "consumedBy": ["auth-validator"]
+    },
+    {
+      "type": "AUTH.SUCCESS",
+      "description": "Authentication successful",
+      "emittedBy": ["auth-validator"],
+      "consumedBy": ["dashboard-loader"]
+    },
+    {
+      "type": "AUTH.FAILURE",
+      "description": "Authentication failed",
+      "emittedBy": ["auth-validator"],
+      "consumedBy": ["error-display"]
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "AUTH.LOGIN_REQUEST",
+      "namespace": "AUTH",
+      "action": "LOGIN_REQUEST",
+      "description": "User login request with email and password",
+      "payloadSchema": {
+        "email": "string",
+        "password": "string"
+      },
+      "emittedBy": ["ui.component"],
+      "consumedBy": ["logic.validate"]
+    },
+    {
+      "type": "AUTH.SUCCESS",
+      "namespace": "AUTH",
+      "action": "SUCCESS",
+      "description": "Authentication successful",
+      "payloadSchema": {
+        "userId": "string",
+        "email": "string",
+        "token": "string"
+      },
+      "emittedBy": ["logic.transform"],
+      "consumedBy": ["ui.component"]
+    },
+    {
+      "type": "AUTH.FAILURE",
+      "namespace": "AUTH",
+      "action": "FAILURE",
+      "description": "Authentication failed",
+      "payloadSchema": {
+        "error": "string",
+        "code": "string"
+      },
+      "emittedBy": ["logic.transform"],
+      "consumedBy": ["ui.component"]
+    },
+    {
+      "type": "VALIDATION.EMAIL_ERROR",
+      "namespace": "VALIDATION",
+      "action": "EMAIL_ERROR",
+      "description": "Email validation error",
+      "payloadSchema": {
+        "message": "string",
+        "field": "string"
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["ui.component"]
+    },
+    {
+      "type": "VALIDATION.PASSWORD_ERROR",
+      "namespace": "VALIDATION",
+      "action": "PASSWORD_ERROR",
+      "description": "Password validation error",
+      "payloadSchema": {
+        "message": "string",
+        "field": "string"
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["ui.component"]
+    },
+    {
+      "type": "VALIDATION.SUCCESS",
+      "namespace": "VALIDATION",
+      "action": "SUCCESS",
+      "description": "Validation passed, proceed with auth",
+      "payloadSchema": {
+        "email": "string",
+        "password": "string"
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["logic.transform"]
+    },
+    {
+      "type": "UI.SHOW_SUCCESS",
+      "namespace": "UI",
+      "action": "SHOW_SUCCESS",
+      "description": "Show success message in UI",
+      "payloadSchema": {
+        "message": "string"
+      },
+      "emittedBy": ["logic.transform"],
+      "consumedBy": ["ui.component"]
+    },
+    {
+      "type": "UI.SHOW_ERROR",
+      "namespace": "UI",
+      "action": "SHOW_ERROR",
+      "description": "Show error message in UI",
+      "payloadSchema": {
+        "message": "string"
+      },
+      "emittedBy": ["logic.transform"],
+      "consumedBy": ["ui.component"]
+    }
+  ]
+}

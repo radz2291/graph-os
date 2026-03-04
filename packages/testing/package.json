@@ -1,0 +1,45 @@
+{
+  "name": "@graph-os/testing",
+  "version": "1.0.0",
+  "description": "Testing framework for Graph-OS - MCP testing tools for cartridges and nodes",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.33",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "@graph-os/core": "file:../core",
+    "@graph-os/mcp-tools": "file:../mcp-tools",
+    "@graph-os/runtime": "file:../runtime"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graph-os/graph-os.git",
+    "directory": "packages/testing"
+  },
+  "keywords": [
+    "graph-os",
+    "testing",
+    "mcp",
+    "integration-testing",
+    "unit-testing",
+    "regression-testing"
+  ],
+  "author": "Graph-OS Team",
+  "license": "MIT"
+}

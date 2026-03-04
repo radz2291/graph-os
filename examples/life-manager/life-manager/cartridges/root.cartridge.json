@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "name": "life-manager",
+  "description": "Root cartridge for life manager application with tasks, habits, goals, and journaling",
+  "inputs": [],
+  "outputs": [],
+  "nodes": [
+    {
+      "id": "app-input",
+      "type": "control.input",
+      "description": "Main application input handler",
+      "config": {
+        "outputSignalType": "APP.READY"
+      }
+    },
+    {
+      "id": "app-status",
+      "type": "control.display",
+      "description": "Display application status",
+      "config": {
+        "format": "json",
+        "prefix": "🚀"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "app-input",
+      "to": "app-status",
+      "signalType": "APP.READY"
+    }
+  ]
+}

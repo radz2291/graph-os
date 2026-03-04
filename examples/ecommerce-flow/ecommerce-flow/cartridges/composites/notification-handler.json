@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "type": "composite",
+  "name": "notification-handler",
+  "description": "Handles all notification types",
+  "inputs": [
+    {
+      "signalType": "NOTIFICATION.REQUEST",
+      "description": "Notification request"
+    }
+  ],
+  "outputs": [
+    {
+      "signalType": "NOTIFICATION.SENT",
+      "description": "Notification sent"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "notification-formatter",
+      "type": "logic.transform",
+      "description": "Format notification",
+      "config": {
+        "outputSignalType": "NOTIFICATION.FORMATTED"
+      }
+    },
+    {
+      "id": "notification-sender",
+      "type": "io.notification",
+      "description": "Send notification",
+      "config": {
+        "outputSignalType": "NOTIFICATION.SENT"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "notification-formatter",
+      "to": "notification-sender",
+      "signalType": "NOTIFICATION.FORMATTED"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-24T11:24:46.398Z",
+    "graphOsVersion": "1.0.0"
+  }
+}

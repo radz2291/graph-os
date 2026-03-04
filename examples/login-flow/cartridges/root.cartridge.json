@@ -1,0 +1,138 @@
+{
+  "version": "1.0.0",
+  "name": "login-flow",
+  "description": "Complete login flow demonstrating user authentication with Graph-OS",
+  "inputs": [
+    {
+      "name": "credentials",
+      "signalType": "AUTH.CREDENTIALS",
+      "description": "User credentials for authentication"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "success",
+      "signalType": "AUTH.SUCCESS",
+      "description": "Authentication successful"
+    },
+    {
+      "name": "failure",
+      "signalType": "AUTH.FAILURE",
+      "description": "Authentication failed"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "email-input",
+      "type": "control.input",
+      "description": "Accept email input",
+      "config": {
+        "prompt": "Enter email: ",
+        "outputSignalType": "INPUT.EMAIL",
+        "fieldName": "email"
+      }
+    },
+    {
+      "id": "password-input",
+      "type": "control.input",
+      "description": "Accept password input",
+      "config": {
+        "prompt": "Enter password: ",
+        "outputSignalType": "INPUT.PASSWORD",
+        "fieldName": "password"
+      }
+    },
+    {
+      "id": "email-validator",
+      "type": "logic.validate",
+      "description": "Validate email format",
+      "config": {
+        "schema": {
+          "type": "object",
+          "required": ["email"],
+          "properties": {
+            "email": {
+              "type": "string",
+              "pattern": "^[^@]+@[^@]+\\.[^@]+$"
+            }
+          }
+        },
+        "successSignalType": "EMAIL.VALID",
+        "failureSignalType": "EMAIL.INVALID"
+      }
+    },
+    {
+      "id": "password-validator",
+      "type": "logic.validate",
+      "description": "Validate password strength",
+      "config": {
+        "schema": {
+          "type": "object",
+          "required": ["password"],
+          "properties": {
+            "password": {
+              "type": "string",
+              "minLength": 6
+            }
+          }
+        },
+        "successSignalType": "PASSWORD.VALID",
+        "failureSignalType": "PASSWORD.INVALID"
+      }
+    },
+    {
+      "id": "credentials-transform",
+      "type": "logic.transform",
+      "description": "Combine email and password into credentials",
+      "config": {
+        "outputSignalType": "AUTH.CREDENTIALS",
+        "rules": [],
+        "includeUnmatched": true
+      }
+    },
+    {
+      "id": "auth-api",
+      "type": "infra.api.client",
+      "description": "Call authentication API",
+      "config": {
+        "baseUrl": "https://api.example.com",
+        "method": "POST",
+        "successSignalType": "AUTH.SUCCESS",
+        "failureSignalType": "AUTH.FAILURE",
+        "endpointPath": "endpoint",
+        "bodyPath": "credentials"
+      }
+    },
+    {
+      "id": "success-display",
+      "type": "control.display",
+      "description": "Display success message",
+      "config": {
+        "format": "json",
+        "prefix": "✅",
+        "showTimestamp": true
+      }
+    },
+    {
+      "id": "error-display",
+      "type": "control.display",
+      "description": "Display error message",
+      "config": {
+        "format": "json",
+        "prefix": "❌",
+        "showTimestamp": true
+      }
+    }
+  ],
+  "wires": [
+    { "from": "email-input", "to": "email-validator", "signalType": "INPUT.EMAIL" },
+    { "from": "password-input", "to": "password-validator", "signalType": "INPUT.PASSWORD" },
+    { "from": "email-validator", "to": "credentials-transform", "signalType": "EMAIL.VALID" },
+    { "from": "password-validator", "to": "credentials-transform", "signalType": "PASSWORD.VALID" },
+    { "from": "email-validator", "to": "error-display", "signalType": "EMAIL.INVALID" },
+    { "from": "password-validator", "to": "error-display", "signalType": "PASSWORD.INVALID" },
+    { "from": "credentials-transform", "to": "auth-api", "signalType": "AUTH.CREDENTIALS" },
+    { "from": "auth-api", "to": "success-display", "signalType": "AUTH.SUCCESS" },
+    { "from": "auth-api", "to": "error-display", "signalType": "AUTH.FAILURE" }
+  ]
+}

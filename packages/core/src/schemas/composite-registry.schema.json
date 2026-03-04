@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-os.com/schemas/composite-registry.schema.json",
+  "title": "Graph-OS Composite Registry",
+  "description": "Schema for composite registry files",
+  "type": "object",
+  "required": ["version", "composites"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Registry format version"
+    },
+    "composites": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/compositeEntry"
+      },
+      "description": "Registered composites"
+    }
+  },
+  "definitions": {
+    "compositeEntry": {
+      "type": "object",
+      "required": ["id", "name", "description", "path", "nodeCount"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^composite\\.[a-z][a-z0-9.]*$",
+          "description": "Composite identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Human-readable name"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "description": "Composite description"
+        },
+        "path": {
+          "type": "string",
+          "description": "Path to the cartridge file"
+        },
+        "nodeCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30,
+          "description": "Number of nodes in the composite"
+        },
+        "wireCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50,
+          "description": "Number of wires in the composite"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Input signal types"
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Output signal types"
+        },
+        "registeredAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Registration timestamp"
+        }
+      }
+    }
+  }
+}

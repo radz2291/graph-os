@@ -1,0 +1,43 @@
+{
+  "id": "simple-input-display",
+  "name": "simple-input-display",
+  "version": "1.0.0",
+  "description": "Simple input-to-display application with React frontend",
+  "nodes": [
+    {
+      "id": "input-node",
+      "type": "control.input",
+      "config": {
+        "description": "Entry point for user input submissions"
+      }
+    },
+    {
+      "id": "storage-node",
+      "type": "infra.storage.local",
+      "config": {
+        "description": "Store user inputs locally"
+      }
+    },
+    {
+      "id": "display-node",
+      "type": "control.display",
+      "config": {
+        "description": "Display user inputs"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "id": "wire-input-to-storage",
+      "from": "input-node",
+      "to": "storage-node",
+      "signalType": "INPUT.SUBMIT"
+    },
+    {
+      "id": "wire-storage-to-display",
+      "from": "storage-node",
+      "to": "display-node",
+      "signalType": "STORAGE.SUCCESS"
+    }
+  ]
+}

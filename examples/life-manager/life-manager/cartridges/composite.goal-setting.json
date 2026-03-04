@@ -1,0 +1,209 @@
+{
+  "version": "1.0.0",
+  "type": "composite",
+  "name": "goal-setting",
+  "description": "Goal setting and tracking system with milestones, progress calculation, and achievement tracking",
+  "inputs": [
+    "GOAL.CREATE",
+    "GOAL.UPDATE",
+    "GOAL.ACHIEVE"
+  ],
+  "outputs": [
+    "GOAL.CREATED",
+    "GOAL.UPDATED",
+    "GOAL.ACHIEVED",
+    "GOAL.PROGRESS_UPDATED"
+  ],
+  "nodes": [
+    {
+      "id": "goal-input",
+      "type": "control.input",
+      "description": "Accept goal creation and update requests",
+      "config": {
+        "outputSignalType": "GOAL.CREATE",
+        "fieldName": "title"
+      }
+    },
+    {
+      "id": "goal-validator",
+      "type": "logic.validate",
+      "description": "Validate goal data structure",
+      "config": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "title",
+            "deadline"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 3
+            },
+            "deadline": {
+              "type": "string"
+            },
+            "target": {
+              "type": "number"
+            }
+          }
+        },
+        "successSignalType": "GOAL.VALID",
+        "failureSignalType": "GOAL.INVALID"
+      }
+    },
+    {
+      "id": "goal-enricher",
+      "type": "logic.transform",
+      "description": "Add metadata to goal",
+      "config": {
+        "outputSignalType": "GOAL.ENRICHED",
+        "rules": [
+          {
+            "from": "title",
+            "to": "title",
+            "transform": "trim"
+          },
+          {
+            "from": "deadline",
+            "to": "deadline"
+          },
+          {
+            "from": "target",
+            "to": "target"
+          }
+        ],
+        "includeUnmatched": true
+      }
+    },
+    {
+      "id": "progress-calculator",
+      "type": "logic.transform",
+      "description": "Calculate goal progress percentage",
+      "config": {
+        "outputSignalType": "GOAL.PROGRESS_UPDATED",
+        "rules": [
+          {
+            "transform": "calculateProgress",
+            "to": "progress"
+          }
+        ],
+        "includeUnmatched": true
+      }
+    },
+    {
+      "id": "goal-storage",
+      "type": "infra.storage.local",
+      "description": "Store goals to local storage",
+      "config": {
+        "path": "./data/goals.json",
+        "operation": "append"
+      }
+    },
+    {
+      "id": "achievement-processor",
+      "type": "logic.transform",
+      "description": "Process goal achievement and calculate completion stats",
+      "config": {
+        "outputSignalType": "GOAL.ACHIEVED",
+        "rules": [
+          {
+            "from": "goalId",
+            "to": "goalId"
+          },
+          {
+            "transform": "timestamp",
+            "to": "achievedAt"
+          }
+        ],
+        "includeUnmatched": false
+      }
+    },
+    {
+      "id": "success-display",
+      "type": "control.display",
+      "description": "Display goal success results",
+      "config": {
+        "format": "json",
+        "prefix": "🎯",
+        "showTimestamp": true
+      }
+    },
+    {
+      "id": "error-display",
+      "type": "control.display",
+      "description": "Display validation errors",
+      "config": {
+        "format": "json",
+        "prefix": "❌",
+        "showTimestamp": true
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "goal-input",
+      "to": "goal-validator",
+      "signalType": "GOAL.CREATE"
+    },
+    {
+      "from": "goal-input",
+      "to": "goal-validator",
+      "signalType": "GOAL.UPDATE"
+    },
+    {
+      "from": "goal-input",
+      "to": "goal-validator",
+      "signalType": "GOAL.ACHIEVE"
+    },
+    {
+      "from": "goal-validator",
+      "to": "goal-enricher",
+      "signalType": "GOAL.VALID"
+    },
+    {
+      "from": "goal-validator",
+      "to": "error-display",
+      "signalType": "GOAL.INVALID"
+    },
+    {
+      "from": "goal-enricher",
+      "to": "goal-storage",
+      "signalType": "GOAL.ENRICHED"
+    },
+    {
+      "from": "goal-storage",
+      "to": "success-display",
+      "signalType": "GOAL.CREATED"
+    },
+    {
+      "from": "goal-storage",
+      "to": "success-display",
+      "signalType": "GOAL.UPDATED"
+    },
+    {
+      "from": "goal-storage",
+      "to": "progress-calculator",
+      "signalType": "GOAL.UPDATED"
+    },
+    {
+      "from": "progress-calculator",
+      "to": "success-display",
+      "signalType": "GOAL.PROGRESS_UPDATED"
+    },
+    {
+      "from": "goal-input",
+      "to": "achievement-processor",
+      "signalType": "GOAL.ACHIEVE"
+    },
+    {
+      "from": "achievement-processor",
+      "to": "success-display",
+      "signalType": "GOAL.ACHIEVED"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-24T21:19:53.535Z",
+    "graphOsVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "version": "1.0.0",
+  "name": "task-management-mvp",
+  "description": "Root cartridge for task-management-mvp - Task Management MVP using Graph-OS v4",
+  "inputs": [],
+  "outputs": [],
+  "nodes": [
+    {
+      "id": "task-input",
+      "type": "control.input",
+      "description": "Task input handler for creating new tasks",
+      "config": {
+        "outputSignalType": "TASK.SUBMITTED",
+        "fields": [
+          "title",
+          "description",
+          "priority"
+        ]
+      }
+    },
+    {
+      "id": "task-validator",
+      "type": "logic.validate",
+      "description": "Validate task input",
+      "config": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string"
+            },
+            "priority": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            }
+          },
+          "required": [
+            "title",
+            "priority"
+          ]
+        },
+        "successSignalType": "TASK.VALID",
+        "failureSignalType": "TASK.INVALID"
+      }
+    },
+    {
+      "id": "task-storage",
+      "type": "infra.storage.local",
+      "description": "Store tasks in local storage",
+      "config": {
+        "key": "tasks",
+        "outputSignalType": "TASK.SAVED",
+        "deleteSignalType": "TASK.DELETED",
+        "listSignalType": "TASK.LISTED"
+      }
+    },
+    {
+      "id": "task-display",
+      "type": "control.display",
+      "description": "Display task results and lists",
+      "config": {
+        "format": "json",
+        "showTimestamp": true
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "task-input",
+      "to": "task-validator",
+      "signalType": "TASK.SUBMITTED"
+    },
+    {
+      "from": "task-validator",
+      "to": "task-storage",
+      "signalType": "TASK.VALID"
+    },
+    {
+      "from": "task-storage",
+      "to": "task-display",
+      "signalType": "TASK.SAVED"
+    },
+    {
+      "from": "task-validator",
+      "to": "task-display",
+      "signalType": "TASK.INVALID"
+    }
+  ]
+}

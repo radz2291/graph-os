@@ -1,0 +1,888 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "AUTH.LOGIN_REQUEST",
+      "namespace": "AUTH",
+      "action": "LOGIN_REQUEST",
+      "description": "Emitted when user attempts login",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:18:47.204Z"
+    },
+    {
+      "type": "VALIDATION.EMAIL_OK",
+      "namespace": "VALIDATION",
+      "action": "EMAIL_OK",
+      "description": "Email validation passed",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:18:47.204Z"
+    },
+    {
+      "type": "VALIDATION.EMAIL_ERROR",
+      "namespace": "VALIDATION",
+      "action": "EMAIL_ERROR",
+      "description": "Email validation failed",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:18:47.204Z"
+    },
+    {
+      "type": "VALIDATION.PASSWORD_OK",
+      "namespace": "VALIDATION",
+      "action": "PASSWORD_OK",
+      "description": "Password validation passed",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:18:47.204Z"
+    },
+    {
+      "type": "VALIDATION.PASSWORD_ERROR",
+      "namespace": "VALIDATION",
+      "action": "PASSWORD_ERROR",
+      "description": "Password validation failed",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:18:47.204Z"
+    },
+    {
+      "type": "AUTH.SUCCESS",
+      "namespace": "AUTH",
+      "action": "SUCCESS",
+      "description": "Authentication successful",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:18:47.204Z"
+    },
+    {
+      "type": "TASK.CREATE",
+      "namespace": "TASK",
+      "action": "CREATE",
+      "description": "Emitted when user creates a new task",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 3
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        },
+        "required": [
+          "description"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:19:19.508Z"
+    },
+    {
+      "type": "TASK.UPDATE",
+      "namespace": "TASK",
+      "action": "UPDATE",
+      "description": "Emitted when user updates an existing task",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "updates": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "taskId"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:19:19.693Z"
+    },
+    {
+      "type": "TASK.COMPLETE",
+      "namespace": "TASK",
+      "action": "COMPLETE",
+      "description": "Emitted when user marks task as completed",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:19:19.943Z"
+    },
+    {
+      "type": "TASK.DELETE",
+      "namespace": "TASK",
+      "action": "DELETE",
+      "description": "Emitted when user deletes a task",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:19:20.283Z"
+    },
+    {
+      "type": "TASK.VALID",
+      "namespace": "TASK",
+      "action": "VALID",
+      "description": "Emitted when task validation passes",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:19:20.736Z"
+    },
+    {
+      "type": "TASK.INVALID",
+      "namespace": "TASK",
+      "action": "INVALID",
+      "description": "Emitted when task validation fails",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:20.999Z"
+    },
+    {
+      "type": "TASK.ENRICHED",
+      "namespace": "TASK",
+      "action": "ENRICHED",
+      "description": "Emitted when task is enriched with metadata",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "infra.storage.local"
+      ],
+      "registeredAt": "2026-02-24T21:19:21.211Z"
+    },
+    {
+      "type": "TASK.CREATED",
+      "namespace": "TASK",
+      "action": "CREATED",
+      "description": "Emitted when task is successfully created and stored",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "task": {
+            "type": "object"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:21.416Z"
+    },
+    {
+      "type": "TASK.UPDATED",
+      "namespace": "TASK",
+      "action": "UPDATED",
+      "description": "Emitted when task is successfully updated",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "task": {
+            "type": "object"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:21.618Z"
+    },
+    {
+      "type": "TASK.COMPLETED",
+      "namespace": "TASK",
+      "action": "COMPLETED",
+      "description": "Emitted when task is marked as completed",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:21.818Z"
+    },
+    {
+      "type": "TASK.DELETED",
+      "namespace": "TASK",
+      "action": "DELETED",
+      "description": "Emitted when task is deleted",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:22.039Z"
+    },
+    {
+      "type": "HABIT.CREATE",
+      "namespace": "HABIT",
+      "action": "CREATE",
+      "description": "Emitted when user creates a new habit",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:19:41.173Z"
+    },
+    {
+      "type": "HABIT.CHECK_IN",
+      "namespace": "HABIT",
+      "action": "CHECK_IN",
+      "description": "Emitted when user checks in to a habit",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habitId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "habitId"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:19:41.387Z"
+    },
+    {
+      "type": "HABIT.UPDATE",
+      "namespace": "HABIT",
+      "action": "UPDATE",
+      "description": "Emitted when user updates a habit",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habitId": {
+            "type": "string"
+          },
+          "updates": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "habitId"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:19:41.582Z"
+    },
+    {
+      "type": "HABIT.VALID",
+      "namespace": "HABIT",
+      "action": "VALID",
+      "description": "Emitted when habit validation passes",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:19:41.766Z"
+    },
+    {
+      "type": "HABIT.INVALID",
+      "namespace": "HABIT",
+      "action": "INVALID",
+      "description": "Emitted when habit validation fails",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:41.950Z"
+    },
+    {
+      "type": "HABIT.ENRICHED",
+      "namespace": "HABIT",
+      "action": "ENRICHED",
+      "description": "Emitted when habit is enriched with metadata",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "infra.storage.local"
+      ],
+      "registeredAt": "2026-02-24T21:19:42.149Z"
+    },
+    {
+      "type": "HABIT.CREATED",
+      "namespace": "HABIT",
+      "action": "CREATED",
+      "description": "Emitted when habit is successfully created",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habitId": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "logic.transform",
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:42.393Z"
+    },
+    {
+      "type": "HABIT.CHECKED_IN",
+      "namespace": "HABIT",
+      "action": "CHECKED_IN",
+      "description": "Emitted when habit check-in is recorded",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habitId": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "logic.transform",
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:42.579Z"
+    },
+    {
+      "type": "HABIT.UPDATED",
+      "namespace": "HABIT",
+      "action": "UPDATED",
+      "description": "Emitted when habit is successfully updated",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habitId": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:42.771Z"
+    },
+    {
+      "type": "HABIT.STREAK_UPDATED",
+      "namespace": "HABIT",
+      "action": "STREAK_UPDATED",
+      "description": "Emitted when streak is recalculated after check-in",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "streakCount": {
+            "type": "number"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:19:42.953Z"
+    },
+    {
+      "type": "GOAL.CREATE",
+      "namespace": "GOAL",
+      "action": "CREATE",
+      "description": "Emitted when user creates a new goal",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string"
+          },
+          "target": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "title",
+          "deadline"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:20:03.644Z"
+    },
+    {
+      "type": "GOAL.UPDATE",
+      "namespace": "GOAL",
+      "action": "UPDATE",
+      "description": "Emitted when user updates an existing goal",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "goalId": {
+            "type": "string"
+          },
+          "updates": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "goalId"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T21:20:03.855Z"
+    },
+    {
+      "type": "GOAL.ACHIEVE",
+      "namespace": "GOAL",
+      "action": "ACHIEVE",
+      "description": "Emitted when user marks a goal as achieved",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "goalId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "goalId"
+        ]
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:20:04.053Z"
+    },
+    {
+      "type": "GOAL.VALID",
+      "namespace": "GOAL",
+      "action": "VALID",
+      "description": "Emitted when goal validation passes",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:20:04.247Z"
+    },
+    {
+      "type": "GOAL.INVALID",
+      "namespace": "GOAL",
+      "action": "INVALID",
+      "description": "Emitted when goal validation fails",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:20:04.451Z"
+    },
+    {
+      "type": "GOAL.ENRICHED",
+      "namespace": "GOAL",
+      "action": "ENRICHED",
+      "description": "Emitted when goal is enriched with metadata",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "infra.storage.local"
+      ],
+      "registeredAt": "2026-02-24T21:20:04.688Z"
+    },
+    {
+      "type": "GOAL.CREATED",
+      "namespace": "GOAL",
+      "action": "CREATED",
+      "description": "Emitted when goal is successfully created",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "goalId": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:20:04.912Z"
+    },
+    {
+      "type": "GOAL.UPDATED",
+      "namespace": "GOAL",
+      "action": "UPDATED",
+      "description": "Emitted when goal is successfully updated",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "goalId": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "control.display",
+        "logic.transform"
+      ],
+      "registeredAt": "2026-02-24T21:20:05.123Z"
+    },
+    {
+      "type": "GOAL.PROGRESS_UPDATED",
+      "namespace": "GOAL",
+      "action": "PROGRESS_UPDATED",
+      "description": "Emitted when goal progress is recalculated",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "progress": {
+            "type": "number"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:20:05.324Z"
+    },
+    {
+      "type": "GOAL.ACHIEVED",
+      "namespace": "GOAL",
+      "action": "ACHIEVED",
+      "description": "Emitted when goal is achieved",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "goalId": {
+            "type": "string"
+          },
+          "achievedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.transform"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:20:05.511Z"
+    },
+    {
+      "type": "APP.READY",
+      "namespace": "APP",
+      "action": "READY",
+      "description": "Emitted when application is ready to accept user input",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T21:20:32.417Z"
+    }
+  ]
+}

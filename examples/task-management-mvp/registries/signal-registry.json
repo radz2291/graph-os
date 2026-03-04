@@ -1,0 +1,200 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "FORM.SUBMITTED",
+      "namespace": "FORM",
+      "action": "SUBMITTED",
+      "description": "Emitted when form is submitted",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T03:12:25.624Z"
+    },
+    {
+      "type": "VALIDATION.SUCCESS",
+      "namespace": "VALIDATION",
+      "action": "SUCCESS",
+      "description": "Emitted when validation passes",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "infra.storage.local"
+      ],
+      "registeredAt": "2026-02-24T03:12:25.625Z"
+    },
+    {
+      "type": "VALIDATION.ERROR",
+      "namespace": "VALIDATION",
+      "action": "ERROR",
+      "description": "Emitted when validation fails",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T03:12:25.625Z"
+    },
+    {
+      "type": "STORAGE.SAVED",
+      "namespace": "STORAGE",
+      "action": "SAVED",
+      "description": "Emitted when data is saved",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T03:12:25.625Z"
+    },
+    {
+      "type": "TASK.SUBMITTED",
+      "namespace": "TASK",
+      "action": "SUBMITTED",
+      "description": "Emitted when a task form is submitted",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "control.input"
+      ],
+      "consumedBy": [
+        "logic.validate"
+      ],
+      "registeredAt": "2026-02-24T03:17:14.931Z"
+    },
+    {
+      "type": "TASK.VALID",
+      "namespace": "TASK",
+      "action": "VALID",
+      "description": "Emitted when task validation passes",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "infra.storage.local"
+      ],
+      "registeredAt": "2026-02-24T03:17:23.957Z"
+    },
+    {
+      "type": "TASK.SAVED",
+      "namespace": "TASK",
+      "action": "SAVED",
+      "description": "Emitted when task is saved to storage",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "emittedBy": [
+        "infra.storage.local"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T03:17:33.406Z"
+    },
+    {
+      "type": "TASK.INVALID",
+      "namespace": "TASK",
+      "action": "INVALID",
+      "description": "Emitted when task validation fails",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array"
+          }
+        }
+      },
+      "emittedBy": [
+        "logic.validate"
+      ],
+      "consumedBy": [
+        "control.display"
+      ],
+      "registeredAt": "2026-02-24T03:17:42.166Z"
+    }
+  ]
+}

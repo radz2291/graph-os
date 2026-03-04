@@ -1,0 +1,26 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "activeCartridge": "main",
+  "cartridges": {
+    "main": {
+      "path": "cartridges/root.cartridge.json",
+      "description": "Main test cartridge"
+    },
+    "auth": {
+      "path": "cartridges/auth.cartridge.json",
+      "description": "Authentication flow"
+    }
+  },
+  "signalRegistry": "registries/signals.json",
+  "compositeRegistry": "registries/composites.json",
+  "runtime": {
+    "debug": false,
+    "logLevel": "info",
+    "timeout": 30000
+  },
+  "history": {
+    "enabled": true,
+    "maxCheckpoints": 10
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "INPUT.EMAIL",
+      "namespace": "INPUT",
+      "action": "EMAIL",
+      "description": "User entered email address",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" }
+        }
+      },
+      "emittedBy": ["control.input"],
+      "consumedBy": ["logic.validate"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "INPUT.PASSWORD",
+      "namespace": "INPUT",
+      "action": "PASSWORD",
+      "description": "User entered password",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "password": { "type": "string" }
+        }
+      },
+      "emittedBy": ["control.input"],
+      "consumedBy": ["logic.validate"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "EMAIL.VALID",
+      "namespace": "EMAIL",
+      "action": "VALID",
+      "description": "Email format is valid",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "originalPayload": { "type": "object" }
+        }
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["logic.transform"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "EMAIL.INVALID",
+      "namespace": "EMAIL",
+      "action": "INVALID",
+      "description": "Email format is invalid",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": { "type": "array" }
+        }
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["control.display"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "PASSWORD.VALID",
+      "namespace": "PASSWORD",
+      "action": "VALID",
+      "description": "Password meets requirements",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "originalPayload": { "type": "object" }
+        }
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["logic.transform"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "PASSWORD.INVALID",
+      "namespace": "PASSWORD",
+      "action": "INVALID",
+      "description": "Password does not meet requirements",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": { "type": "array" }
+        }
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["control.display"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "AUTH.CREDENTIALS",
+      "namespace": "AUTH",
+      "action": "CREDENTIALS",
+      "description": "Combined user credentials",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        }
+      },
+      "emittedBy": ["logic.transform"],
+      "consumedBy": ["infra.api.client"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "AUTH.SUCCESS",
+      "namespace": "AUTH",
+      "action": "SUCCESS",
+      "description": "Authentication successful",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "number" },
+          "data": { "type": "object" }
+        }
+      },
+      "emittedBy": ["infra.api.client"],
+      "consumedBy": ["control.display"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "type": "AUTH.FAILURE",
+      "namespace": "AUTH",
+      "action": "FAILURE",
+      "description": "Authentication failed",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        }
+      },
+      "emittedBy": ["infra.api.client", "logic.validate"],
+      "consumedBy": ["control.display"],
+      "registeredAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}

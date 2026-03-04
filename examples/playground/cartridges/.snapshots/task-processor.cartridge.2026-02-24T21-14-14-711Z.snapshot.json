@@ -1,0 +1,151 @@
+{
+  "version": "1.0.0",
+  "name": "task-processor",
+  "description": "A task processing cartridge demonstrating signal-driven architecture with validation, transformation, and storage operations",
+  "inputs": [],
+  "outputs": [],
+  "nodes": [
+    {
+      "id": "task-input",
+      "type": "control.input",
+      "description": "Accept new task creation requests",
+      "config": {
+        "prompt": "Enter task description: ",
+        "outputSignalType": "TASK.CREATE",
+        "fieldName": "description"
+      }
+    },
+    {
+      "id": "task-validator",
+      "type": "logic.validate",
+      "description": "Validate task data structure",
+      "config": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "description"
+          ],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 3
+            }
+          }
+        },
+        "successSignalType": "TASK.VALID",
+        "failureSignalType": "TASK.INVALID"
+      }
+    },
+    {
+      "id": "task-transform",
+      "type": "logic.transform",
+      "description": "Enrich task with metadata",
+      "config": {
+        "outputSignalType": "TASK.ENRICHED",
+        "rules": [
+          {
+            "from": "description",
+            "to": "title",
+            "transform": "trim"
+          }
+        ],
+        "includeUnmatched": false
+      }
+    },
+    {
+      "id": "priority-router",
+      "type": "logic.router",
+      "description": "Route tasks by priority",
+      "config": {
+        "defaultSignalType": "TASK.NORMAL_PRIORITY",
+        "routes": [
+          {
+            "condition": "priority === 'high'",
+            "outputSignalType": "TASK.HIGH_PRIORITY"
+          },
+          {
+            "condition": "priority === 'urgent'",
+            "outputSignalType": "TASK.URGENT_PRIORITY"
+          }
+        ]
+      }
+    },
+    {
+      "id": "high-priority-display",
+      "type": "control.display",
+      "description": "Display high priority tasks",
+      "config": {
+        "format": "json",
+        "prefix": "🔥 HIGH PRIORITY",
+        "showTimestamp": true
+      }
+    },
+    {
+      "id": "urgent-priority-display",
+      "type": "control.display",
+      "description": "Display urgent tasks",
+      "config": {
+        "format": "json",
+        "prefix": "⚠️ URGENT",
+        "showTimestamp": true
+      }
+    },
+    {
+      "id": "normal-priority-display",
+      "type": "control.display",
+      "description": "Display normal tasks",
+      "config": {
+        "format": "json",
+        "prefix": "📋 TASK",
+        "showTimestamp": true
+      }
+    },
+    {
+      "id": "error-display",
+      "type": "control.display",
+      "description": "Display validation errors",
+      "config": {
+        "format": "json",
+        "prefix": "❌ ERROR",
+        "showTimestamp": true
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "task-input",
+      "to": "task-validator",
+      "signalType": "TASK.CREATE"
+    },
+    {
+      "from": "task-validator",
+      "to": "task-transform",
+      "signalType": "TASK.VALID"
+    },
+    {
+      "from": "task-validator",
+      "to": "error-display",
+      "signalType": "TASK.INVALID"
+    },
+    {
+      "from": "task-transform",
+      "to": "priority-router",
+      "signalType": "TASK.ENRICHED"
+    },
+    {
+      "from": "priority-router",
+      "to": "high-priority-display",
+      "signalType": "TASK.HIGH_PRIORITY"
+    },
+    {
+      "from": "priority-router",
+      "to": "urgent-priority-display",
+      "signalType": "TASK.URGENT_PRIORITY"
+    },
+    {
+      "from": "priority-router",
+      "to": "normal-priority-display",
+      "signalType": "TASK.NORMAL_PRIORITY"
+    }
+  ]
+}

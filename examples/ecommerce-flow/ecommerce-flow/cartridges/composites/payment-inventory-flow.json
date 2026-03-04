@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "name": "payment-inventory-flow",
+  "description": "Extracted composite from ecommerce-order-flow",
+  "nodes": [
+    {
+      "id": "payment-processor",
+      "type": "logic.transform",
+      "description": "Process payment",
+      "config": {
+        "outputSignalType": "PAYMENT.REQUESTED"
+      }
+    },
+    {
+      "id": "payment-api",
+      "type": "infra.api",
+      "description": "Payment API client",
+      "config": {
+        "endpoint": "/api/payments"
+      }
+    },
+    {
+      "id": "inventory-checker",
+      "type": "infra.storage",
+      "description": "Check inventory",
+      "config": {
+        "outputSignalType": "INVENTORY.RESERVED"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "payment-processor",
+      "to": "payment-api",
+      "signalType": "PAYMENT.REQUESTED"
+    },
+    {
+      "from": "payment-api",
+      "to": "inventory-checker",
+      "signalType": "PAYMENT.SUCCESS"
+    }
+  ]
+}

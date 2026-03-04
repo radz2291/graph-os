@@ -1,0 +1,145 @@
+{
+  "version": "1.0.0",
+  "name": "habit-tracker",
+  "description": "Habit tracker application with React + Graph-OS backend using signal-first architecture",
+  "nodes": [
+    {
+      "id": "habit-validator",
+      "type": "logic.validate",
+      "description": "Validate habit data before saving",
+      "config": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string"
+            },
+            "frequency": {
+              "type": "string",
+              "enum": [
+                "daily",
+                "weekly"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "frequency"
+          ]
+        },
+        "successSignalType": "HABIT.VALID",
+        "failureSignalType": "HABIT.INVALID"
+      }
+    },
+    {
+      "id": "habit-transformer",
+      "type": "custom.habit-transformer",
+      "description": "Transform habit data by adding id, createdAt, and initializing completions array",
+      "config": {
+        "outputSignalType": "HABIT.TRANSFORMED"
+      }
+    },
+    {
+      "id": "habit-storage",
+      "type": "infra.storage.local",
+      "description": "Save habits to local storage",
+      "config": {
+        "key": "habits",
+        "outputSignalType": "HABIT.SAVED"
+      }
+    },
+    {
+      "id": "display",
+      "type": "control.display",
+      "description": "Display habits for debugging",
+      "config": {
+        "format": "json",
+        "showTimestamp": true
+      }
+    },
+    {
+      "config": {
+        "id": "habit-create-input",
+        "inputSignalType": "HABIT.CREATE"
+      },
+      "description": "Receive HABIT.CREATE signals from React",
+      "id": "habit-create-input",
+      "type": "control.input"
+    },
+    {
+      "config": {
+        "id": "habit-complete-input",
+        "inputSignalType": "HABIT.COMPLETE"
+      },
+      "description": "Receive HABIT.COMPLETE signals from React",
+      "id": "habit-complete-input",
+      "type": "control.input"
+    },
+    {
+      "config": {
+        "id": "habit-delete-input",
+        "inputSignalType": "HABIT.DELETE"
+      },
+      "description": "Receive HABIT.DELETE signals from React",
+      "id": "habit-delete-input",
+      "type": "control.input"
+    },
+    {
+      "config": {
+        "id": "habit-load-input",
+        "inputSignalType": "HABIT.LOAD"
+      },
+      "description": "Receive HABIT.LOAD signals from React",
+      "id": "habit-load-input",
+      "type": "control.input"
+    }
+  ],
+  "wires": [
+    {
+      "from": "habit-validator",
+      "to": "habit-transformer",
+      "signalType": "HABIT.VALID"
+    },
+    {
+      "from": "habit-transformer",
+      "to": "habit-storage",
+      "signalType": "HABIT.TRANSFORMED"
+    },
+    {
+      "from": "habit-storage",
+      "to": "display",
+      "signalType": "HABIT.SAVED"
+    },
+    {
+      "from": "habit-validator",
+      "to": "display",
+      "signalType": "HABIT.INVALID"
+    },
+    {
+      "from": "habit-create-input",
+      "signalType": "HABIT.CREATE",
+      "to": "habit-validator"
+    },
+    {
+      "from": "habit-complete-input",
+      "signalType": "HABIT.COMPLETE",
+      "to": "completion-transformer"
+    },
+    {
+      "from": "habit-delete-input",
+      "signalType": "HABIT.DELETE",
+      "to": "delete-transformer"
+    },
+    {
+      "from": "habit-load-input",
+      "signalType": "HABIT.LOAD",
+      "to": "load-transformer"
+    }
+  ],
+  "inputs": [],
+  "outputs": []
+}

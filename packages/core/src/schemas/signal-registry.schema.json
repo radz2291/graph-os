@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://graph-os.com/schemas/signal-registry.schema.json",
+  "title": "Graph-OS Signal Registry",
+  "description": "Schema for signal registry files",
+  "type": "object",
+  "required": ["version", "signals"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Registry format version"
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/signalEntry"
+      },
+      "description": "Registered signals"
+    }
+  },
+  "definitions": {
+    "signalEntry": {
+      "type": "object",
+      "required": ["type", "namespace", "action", "description", "payloadSchema"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*\\.[A-Z][A-Z0-9_]*$",
+          "description": "Full signal type (NAMESPACE.ACTION)"
+        },
+        "namespace": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "description": "Signal namespace"
+        },
+        "action": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "description": "Signal action"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Signal description"
+        },
+        "payloadSchema": {
+          "type": "object",
+          "description": "JSON schema for the payload"
+        },
+        "emittedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Node types that emit this signal"
+        },
+        "consumedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Node types that consume this signal"
+        },
+        "registeredAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Registration timestamp"
+        }
+      }
+    }
+  }
+}

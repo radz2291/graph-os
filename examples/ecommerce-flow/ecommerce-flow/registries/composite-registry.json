@@ -1,0 +1,54 @@
+{
+  "composites": [
+    {
+      "name": "payment-inventory-flow",
+      "path": "/home/z/my-project/examples/ecommerce-flow/ecommerce-flow/cartridges/composites/payment-inventory-flow.json",
+      "inputs": [
+        "ORDER.VALIDATED"
+      ],
+      "outputs": [
+        "PAYMENT.FAILED",
+        "INVENTORY.RESERVED",
+        "INVENTORY.FAILED"
+      ],
+      "nodes": [
+        {
+          "id": "payment-processor",
+          "type": "logic.transform",
+          "description": "Process payment",
+          "config": {
+            "outputSignalType": "PAYMENT.REQUESTED"
+          }
+        },
+        {
+          "id": "payment-api",
+          "type": "infra.api",
+          "description": "Payment API client",
+          "config": {
+            "endpoint": "/api/payments"
+          }
+        },
+        {
+          "id": "inventory-checker",
+          "type": "infra.storage",
+          "description": "Check inventory",
+          "config": {
+            "outputSignalType": "INVENTORY.RESERVED"
+          }
+        }
+      ],
+      "wires": [
+        {
+          "from": "payment-processor",
+          "to": "payment-api",
+          "signalType": "PAYMENT.REQUESTED"
+        },
+        {
+          "from": "payment-api",
+          "to": "inventory-checker",
+          "signalType": "PAYMENT.SUCCESS"
+        }
+      ]
+    }
+  ]
+}

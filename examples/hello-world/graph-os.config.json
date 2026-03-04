@@ -1,0 +1,5 @@
+{
+  "cartridge": "cartridges/root.cartridge.json",
+  "signalRegistry": "registries/signal-registry.json",
+  "compositeRegistry": "registries/composite-registry.json"
+}

@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "cartridgeName": "Test Cartridge",
+  "nodeCount": 2,
+  "wireCount": 1,
+  "signalsProcessed": 1,
+  "signalsEmitted": 1,
+  "finalState": "completed",
+  "errors": [],
+  "signalHistory": [
+    {
+      "type": "CONTROL_INPUT.CHANGE",
+      "sourceNodeId": "input-node",
+      "timestamp": "2026-02-26T14:31:06.935Z",
+      "payload": {
+        "value": 42
+      }
+    }
+  ],
+  "nodeTypesUsed": [
+    "control.input",
+    "logic.custom-test"
+  ],
+  "unknownNodeTypes": [],
+  "trace": [
+    "[SIGNAL] Type: CONTROL_INPUT.CHANGE | Payload: {\"value\":42} | Source: input-node"
+  ],
+  "debugLog": "\n\nExecution Trace:\n1. [SIGNAL] Type: CONTROL_INPUT.CHANGE | Payload: {\"value\":42} | Source: input-node"
+}

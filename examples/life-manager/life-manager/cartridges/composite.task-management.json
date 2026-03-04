@@ -1,0 +1,193 @@
+{
+  "version": "1.0.0",
+  "type": "composite",
+  "name": "task-management",
+  "description": "Complete task lifecycle management with creation, categorization, prioritization, and completion tracking",
+  "inputs": [
+    "TASK.CREATE",
+    "TASK.UPDATE",
+    "TASK.COMPLETE",
+    "TASK.DELETE"
+  ],
+  "outputs": [
+    "TASK.CREATED",
+    "TASK.UPDATED",
+    "TASK.COMPLETED",
+    "TASK.DELETED"
+  ],
+  "nodes": [
+    {
+      "id": "task-input",
+      "type": "control.input",
+      "description": "Accept task creation requests",
+      "config": {
+        "prompt": "Enter task: ",
+        "outputSignalType": "TASK.CREATE",
+        "fieldName": "description"
+      }
+    },
+    {
+      "id": "task-validator",
+      "type": "logic.validate",
+      "description": "Validate task data structure",
+      "config": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "description"
+          ],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 3
+            },
+            "priority": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            }
+          }
+        },
+        "successSignalType": "TASK.VALID",
+        "failureSignalType": "TASK.INVALID"
+      }
+    },
+    {
+      "id": "task-enricher",
+      "type": "logic.transform",
+      "description": "Add metadata and timestamps to task",
+      "config": {
+        "outputSignalType": "TASK.ENRICHED",
+        "rules": [
+          {
+            "from": "description",
+            "to": "title",
+            "transform": "trim"
+          },
+          {
+            "from": "priority",
+            "to": "priority"
+          }
+        ],
+        "includeUnmatched": true
+      }
+    },
+    {
+      "id": "task-storage",
+      "type": "infra.storage.local",
+      "description": "Persist task to local storage",
+      "config": {
+        "path": "./data/tasks.json",
+        "operation": "append"
+      }
+    },
+    {
+      "id": "task-completer",
+      "type": "logic.transform",
+      "description": "Mark task as completed with timestamp",
+      "config": {
+        "outputSignalType": "TASK.COMPLETED",
+        "rules": [
+          {
+            "from": "taskId",
+            "to": "taskId"
+          },
+          {
+            "transform": "timestamp",
+            "to": "completedAt"
+          }
+        ],
+        "includeUnmatched": false
+      }
+    },
+    {
+      "id": "task-deleter",
+      "type": "logic.transform",
+      "description": "Prepare task for deletion",
+      "config": {
+        "outputSignalType": "TASK.DELETED",
+        "rules": [
+          {
+            "from": "taskId",
+            "to": "taskId"
+          }
+        ],
+        "includeUnmatched": false
+      }
+    },
+    {
+      "id": "success-display",
+      "type": "control.display",
+      "description": "Display operation success",
+      "config": {
+        "format": "json",
+        "prefix": "✅",
+        "showTimestamp": true
+      }
+    },
+    {
+      "id": "error-display",
+      "type": "control.display",
+      "description": "Display validation errors",
+      "config": {
+        "format": "json",
+        "prefix": "❌",
+        "showTimestamp": true
+      }
+    }
+  ],
+  "wires": [
+    {
+      "from": "task-input",
+      "to": "task-validator",
+      "signalType": "TASK.CREATE"
+    },
+    {
+      "from": "task-validator",
+      "to": "task-enricher",
+      "signalType": "TASK.VALID"
+    },
+    {
+      "from": "task-validator",
+      "to": "error-display",
+      "signalType": "TASK.INVALID"
+    },
+    {
+      "from": "task-enricher",
+      "to": "task-storage",
+      "signalType": "TASK.ENRICHED"
+    },
+    {
+      "from": "task-storage",
+      "to": "success-display",
+      "signalType": "TASK.CREATED"
+    },
+    {
+      "from": "task-input",
+      "to": "task-completer",
+      "signalType": "TASK.COMPLETE"
+    },
+    {
+      "from": "task-completer",
+      "to": "success-display",
+      "signalType": "TASK.COMPLETED"
+    },
+    {
+      "from": "task-input",
+      "to": "task-deleter",
+      "signalType": "TASK.DELETE"
+    },
+    {
+      "from": "task-deleter",
+      "to": "success-display",
+      "signalType": "TASK.DELETED"
+    }
+  ],
+  "metadata": {
+    "createdAt": "2026-02-24T21:19:09.277Z",
+    "graphOsVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "version": "1.0.0",
+  "signals": [
+    {
+      "type": "HABIT.CREATE",
+      "description": "User creates a new habit",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": "string" },
+          "frequency": { "type": "string", "enum": ["daily", "weekly"] }
+        },
+        "required": ["name", "frequency"]
+      },
+      "emittedBy": ["control.input", "react-component"],
+      "consumedBy": ["logic.validate"]
+    },
+    {
+      "type": "HABIT.VALID",
+      "description": "Habit data passed validation",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "originalPayload": { "type": "object" }
+        },
+        "required": ["originalPayload"]
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["logic.transform"]
+    },
+    {
+      "type": "HABIT.INVALID",
+      "description": "Habit data failed validation",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "errors": { "type": "array" },
+          "originalPayload": { "type": "object" }
+        },
+        "required": ["errors", "originalPayload"]
+      },
+      "emittedBy": ["logic.validate"],
+      "consumedBy": ["control.display"]
+    },
+    {
+      "type": "HABIT.SAVED",
+      "description": "Habit was transformed and ready to save",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habit": { "type": "object" }
+        },
+        "required": ["habit"]
+      },
+      "emittedBy": ["logic.transform"],
+      "consumedBy": ["infra.storage.local"]
+    },
+    {
+      "type": "HABIT.LOADED",
+      "description": "All habits loaded from storage",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habits": { "type": "array" }
+        },
+        "required": []
+      },
+      "emittedBy": ["infra.storage.local"],
+      "consumedBy": ["control.display", "react-component"]
+    },
+    {
+      "type": "HABIT.COMPLETED",
+      "description": "Habit completion was saved",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "allHabits": { "type": "array" },
+          "habitId": { "type": "string" },
+          "date": { "type": "string" }
+        },
+        "required": []
+      },
+      "emittedBy": ["infra.storage.local"],
+      "consumedBy": ["control.display", "react-component"]
+    },
+    {
+      "type": "HABIT.DELETED",
+      "description": "Habit was deleted from storage",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "allHabits": { "type": "array" },
+          "habitId": { "type": "string" }
+        },
+        "required": []
+      },
+      "emittedBy": ["infra.storage.local"],
+      "consumedBy": ["control.display", "react-component"]
+    },
+    {
+      "type": "HABIT.COMPLETE",
+      "description": "User marks a habit as completed for today",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habitId": { "type": "string" },
+          "date": { "type": "string", "format": "date" }
+        },
+        "required": ["habitId"]
+      },
+      "emittedBy": ["control.input", "react-component"],
+      "consumedBy": ["infra.storage.local"]
+    },
+    {
+      "type": "HABIT.DELETE",
+      "description": "User requests to delete a habit",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "habitId": { "type": "string" }
+        },
+        "required": ["habitId"]
+      },
+      "emittedBy": ["control.input", "react-component"],
+      "consumedBy": ["infra.storage.local"]
+    },
+    {
+      "type": "HABIT.LOAD",
+      "description": "Request to load all habits from storage",
+      "payloadSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "emittedBy": ["control.input", "react-component"],
+      "consumedBy": ["infra.storage.local"]
+    }
+  ]
+}

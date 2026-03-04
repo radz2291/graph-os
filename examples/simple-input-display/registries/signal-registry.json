@@ -1,0 +1,52 @@
+{
+  "signals": [
+    {
+      "type": "INPUT.SUBMIT",
+      "description": "User submits input to be displayed",
+      "emittedBy": ["control.input"],
+      "consumedBy": ["logic.domain-adapter"]
+    },
+    {
+      "type": "INPUT.DISPLAY",
+      "description": "Display input to user",
+      "emittedBy": ["control.display"],
+      "consumedBy": ["ui.component"]
+    },
+    {
+      "type": "STORAGE.WRITE",
+      "description": "Write input to storage",
+      "emittedBy": ["logic.domain-adapter"],
+      "consumedBy": ["infra.storage.local"]
+    },
+    {
+      "type": "STORAGE.READ",
+      "description": "Read input from storage",
+      "emittedBy": ["control.input"],
+      "consumedBy": ["infra.storage.local"]
+    },
+    {
+      "type": "STORAGE.SUCCESS",
+      "description": "Storage operation succeeded",
+      "emittedBy": ["infra.storage.local"],
+      "consumedBy": ["control.display"]
+    },
+    {
+      "type": "STORAGE.FAILURE",
+      "description": "Storage operation failed",
+      "emittedBy": ["infra.storage.local"],
+      "consumedBy": ["control.display"]
+    },
+    {
+      "type": "UI.INPUT_SUBMIT",
+      "description": "User submits input via UI",
+      "emittedBy": ["ui.component"],
+      "consumedBy": ["control.input"]
+    },
+    {
+      "type": "UI.DISPLAY_UPDATE",
+      "description": "Update display in UI",
+      "emittedBy": ["control.display"],
+      "consumedBy": ["ui.component"]
+    }
+  ]
+}

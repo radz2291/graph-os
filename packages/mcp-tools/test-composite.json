@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "name": "logic_processor",
+  "description": "Extracted composite from parent",
+  "nodes": [
+    {
+      "id": "extract-1",
+      "type": "logic.transform",
+      "config": {}
+    },
+    {
+      "id": "extract-2",
+      "type": "logic.transform",
+      "config": {}
+    }
+  ],
+  "wires": [
+    {
+      "from": "extract-1",
+      "to": "extract-2",
+      "signalType": "DATA.STEP"
+    }
+  ]
+}
