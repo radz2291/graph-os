@@ -85,7 +85,11 @@ export type RuntimeEventType =
   | 'node:initialized'
   | 'node:destroyed'
   | 'node:error'
-  | 'node:processed';
+  | 'node:processed'
+  // v2 extension events
+  | 'phase:enter'
+  | 'phase:exit'
+  | 'extension:action';
 
 /**
  * Event emitted by the runtime.

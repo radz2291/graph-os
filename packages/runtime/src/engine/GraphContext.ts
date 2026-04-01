@@ -16,6 +16,7 @@ export class GraphContextImpl {
   private data: Map<string, unknown> = new Map();
   private logger: Logger;
   private requeueFn?: (signal: Signal, delay?: number) => void;
+  private onPhaseChange?: (from: string, to: string) => void;
 
   constructor(initialPhase: string, logger?: Logger) {
     this.currentPhase = initialPhase;
@@ -25,6 +26,11 @@ export class GraphContextImpl {
   /** Set the requeue callback (wired by runtime) */
   setRequeueFn(fn: (signal: Signal, delay?: number) => void): void {
     this.requeueFn = fn;
+  }
+
+  /** Set the phase change callback (wired by runtime for event emission) */
+  setOnPhaseChange(fn: (from: string, to: string) => void): void {
+    this.onPhaseChange = fn;
   }
 
   get<T = unknown>(key: string, defaultValue?: T): T {
@@ -60,9 +66,15 @@ export class GraphContextImpl {
   advanceTo(phaseId: string): void {
     if (this.currentPhase === phaseId) return;
 
-    this.completedPhases.push(this.currentPhase);
-    this.logger.info(`Phase: ${this.currentPhase} → ${phaseId}`);
+    const fromPhase = this.currentPhase;
+    this.completedPhases.push(fromPhase);
     this.currentPhase = phaseId;
+    this.logger.info(`Phase: ${fromPhase} → ${phaseId}`);
+
+    // Notify runtime so it can emit events for the UI
+    if (this.onPhaseChange) {
+      this.onPhaseChange(fromPhase, phaseId);
+    }
   }
 
   /** Get a snapshot of the full context state (for persistence) */

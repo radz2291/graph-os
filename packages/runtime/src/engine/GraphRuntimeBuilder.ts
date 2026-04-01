@@ -148,9 +148,34 @@ export class GraphRuntime extends BaseRuntimeCore {
             this.processQueue();
           }
         });
+
+        // Wire phase change callback to emit events
+        this.graphContext.setOnPhaseChange((from: string, to: string) => {
+          this.emitEvent('phase:exit', { phase: from, toPhase: to });
+          this.emitEvent('phase:enter', { phase: to, fromPhase: from });
+        });
       } else {
         // No phases — store cartridge ref anyway for extensions
         (this.graphContext as any).cartridge = cartridge;
+
+        // Wire requeue function even for v1 mode
+        this.graphContext.setRequeueFn((signal: Signal, delay?: number) => {
+          if (delay && delay > 0) {
+            setTimeout(() => {
+              this.signalQueue.push(signal);
+              this.processQueue();
+            }, delay);
+          } else {
+            this.signalQueue.push(signal);
+            this.processQueue();
+          }
+        });
+
+        // Wire phase change callback (won't fire for v1, but safe)
+        this.graphContext.setOnPhaseChange((from: string, to: string) => {
+          this.emitEvent('phase:exit', { phase: from, toPhase: to });
+          this.emitEvent('phase:enter', { phase: to, fromPhase: from });
+        });
       }
 
       // Create and initialize all nodes
