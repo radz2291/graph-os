@@ -150,3 +150,17 @@ export type {
 
 // Re-export core values
 export { isSignal, createSignal, BaseNode } from '@graph-os/core';
+
+// ===== v2 EXTENSION SYSTEM =====
+export { ExtensionRegistry } from './extensions/ExtensionRegistry';
+export { ExtensionLoader } from './extensions/ExtensionLoader';
+export { MiddlewarePipeline } from './extensions/pipeline/MiddlewarePipeline';
+export { registerBuiltInExtensions } from './extensions/built-in';
+export { GraphContextImpl } from './engine/GraphContext';
+
+// Built-in extension instances
+export { PhasesExtension } from './extensions/built-in/phases';
+export { GuardExtension } from './extensions/built-in/guard';
+export { RetryExtension, calculateBackoff } from './extensions/built-in/retry';
+export { TimeoutExtension } from './extensions/built-in/timeout';
+export { CompensationExtension } from './extensions/built-in/compensation';

@@ -12,6 +12,12 @@
  */
 
 import { NodeConfig } from '../node/Node';
+import {
+  PhaseDefinition,
+  GuardCondition,
+  RetryConfig,
+  CompensateConfig,
+} from '../extensions/types';
 
 /**
  * Defines a single node within a cartridge.
@@ -43,23 +49,72 @@ export interface NodeDefinition {
 /**
  * Defines a wire connection between two nodes.
  * Wires determine how signals flow through the graph.
+ *
+ * v2 additions (all optional, backward compatible):
+ * - phase / advancesTo (graph-os:phases)
+ * - guard (graph-os:guard)
+ * - retry (graph-os:retry)
+ * - timeout / timeoutSignal (graph-os:timeout)
+ * - compensate (graph-os:compensation)
  */
 export interface WireDefinition {
-  /** 
+  /**
    * Source node ID (the node that emits the signal)
    */
   from: string;
-  
-  /** 
+
+  /**
    * Target node ID (the node that receives the signal)
    */
   to: string;
-  
-  /** 
+
+  /**
    * Type of signal that flows through this wire
    * Only signals of this type will be routed
    */
   signalType: string;
+
+  // ===== v2 Extension Fields (all optional) =====
+
+  /**
+   * Which phase this wire belongs to (graph-os:phases).
+   * Only active when graph is in this phase.
+   */
+  phase?: string;
+
+  /**
+   * Phase to transition to after successful processing (graph-os:phases).
+   */
+  advancesTo?: string;
+
+  /**
+   * Guard condition for conditional routing (graph-os:guard).
+   */
+  guard?: GuardCondition | {
+    all?: GuardCondition[];
+    any?: GuardCondition[];
+  };
+
+  /**
+   * Retry configuration for failed processing (graph-os:retry).
+   */
+  retry?: RetryConfig;
+
+  /**
+   * Max milliseconds to wait before timeout (graph-os:timeout).
+   */
+  timeout?: number;
+
+  /**
+   * Signal type to emit on timeout (graph-os:timeout).
+   * Default: <signalType>.TIMEOUT
+   */
+  timeoutSignal?: string;
+
+  /**
+   * Per-wire compensation config (graph-os:compensation).
+   */
+  compensate?: CompensateConfig;
 }
 
 /**
@@ -94,8 +149,13 @@ export interface OutputDefinition {
 
 /**
  * A Cartridge is a complete, deployable unit of Graph-OS architecture.
- * 
- * It contains:
+ *
+ * v2 additions (all optional, backward compatible):
+ * - Phases (execution stages)
+ * - Extensions (on-demand behavior)
+ * - Compensation (rollback topology)
+ *
+ * v1 fields:
  * - Metadata (name, version, description)
  * - Node definitions
  * - Wire connections
@@ -156,10 +216,45 @@ export interface Cartridge {
    */
   nodes: NodeDefinition[];
   
-  /** 
+  /**
    * Wire connections between nodes
    */
   wires: WireDefinition[];
+
+  // ===== v2 Extension Points (all optional, backward compatible) =====
+
+  /**
+   * Extensions required by this cartridge.
+   * Each entry is an extension ID like "graph-os:phases".
+   * Runtime loads only declared extensions.
+   */
+  extensions?: string[];
+
+  /**
+   * Execution phases. If present, wires declare which phase they belong to.
+   * Only wires in the current phase are active.
+   */
+  phases?: PhaseDefinition[];
+
+  /**
+   * Initial phase when the graph starts.
+   * Only meaningful if phases[] is defined.
+   */
+  initialPhase?: string;
+
+  /**
+   * Compensation (saga) topology.
+   * Declared in the cartridge, executed by graph-os:compensation extension.
+   */
+  compensation?: {
+    strategy: 'backward' | 'forward';
+    steps: Array<{
+      phase: string;
+      node: string;
+      signal: string;
+      requires: string[];
+    }>;
+  };
 }
 
 /**

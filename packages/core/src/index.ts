@@ -78,3 +78,30 @@ export type {
   CompositeConfig,
   SignalMapping,
 } from './composite/CompositeNodeTypes';
+
+// Extension system type exports
+export type {
+  PhaseDefinition,
+  ExtensionDeclaration,
+  GuardCondition,
+  GuardOperator,
+  RetryConfig,
+  DelayConfig,
+  CompensateConfig,
+  AggregateConfig,
+  TransformMapping,
+  CompensationConfig,
+  CompensationStep,
+  GraphContext,
+  BaseHookContext,
+  HookLogger,
+  RouteHookContext,
+  ProcessHookContext,
+  ErrorHookContext,
+  PhaseHookContext,
+  GraphHookContext,
+  HookResult,
+  ErrorResult,
+  ValidationResult,
+  GraphExtension,
+} from './extensions/types';

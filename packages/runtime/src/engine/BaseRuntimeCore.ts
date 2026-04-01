@@ -1,9 +1,9 @@
 /**
  * BaseRuntimeCore - Shared functionality for all runtime implementations
- * 
- * Provides common signal processing, event handling, and lifecycle management
- * shared between GraphRuntime and GraphRuntimeCore.
- * 
+ *
+ * v2: Adds GraphContext (execution state) and MiddlewarePipeline (extension hooks).
+ * If no extensions are loaded, behaves identically to v1.
+ *
  * @module @graph-os/runtime
  */
 
@@ -15,10 +15,14 @@ import {
   RuntimeEventType,
   RuntimeEventHandler,
   RuntimeEvent,
+  WireDefinition,
 } from '@graph-os/core';
 import { SignalBus } from '../signal-bus/SignalBus';
 import { Logger } from '../utils/Logger';
 import { DLQEntry } from './DLQ';
+import { GraphContextImpl } from './GraphContext';
+import { MiddlewarePipeline } from '../extensions/pipeline/MiddlewarePipeline';
+import type { GraphExtension, HookLogger } from '@graph-os/core';
 
 /**
  * Abstract base class for runtime implementations.
@@ -43,9 +47,33 @@ export abstract class BaseRuntimeCore {
   protected signalBus: SignalBus;
   protected logger: Logger;
 
+  // ===== v2 Extension System =====
+  protected graphContext: GraphContextImpl;
+  protected pipeline: MiddlewarePipeline;
+  protected loadedExtensions: GraphExtension[] = [];
+  protected wireDefinitions: WireDefinition[] = [];
+
   constructor(logger?: Logger) {
     this.logger = logger || new Logger();
     this.signalBus = new SignalBus();
+    this.graphContext = new GraphContextImpl('default', this.logger);
+    this.pipeline = new MiddlewarePipeline(this.logger);
+
+    // Wire the requeue function so extensions can re-queue signals
+    this.graphContext.setRequeueFn((signal: Signal, delay?: number) => {
+      if (delay && delay > 0) {
+        setTimeout(() => {
+          this.signalQueue.push(signal);
+          this.processQueue();
+        }, delay);
+      } else {
+        this.signalQueue.push(signal);
+        this.processQueue();
+      }
+    });
+
+    // Give extensions access to the pipeline for firing phase hooks
+    (this.graphContext as any).pipeline = this.pipeline;
   }
 
   /**
@@ -77,6 +105,34 @@ export abstract class BaseRuntimeCore {
       ...this.stats,
       uptime: this.state === 'running' ? Date.now() - this.startTime : this.stats.uptime,
     };
+  }
+
+  /**
+   * Gets the graph execution context (v2).
+   */
+  getGraphContext(): GraphContextImpl {
+    return this.graphContext;
+  }
+
+  /**
+   * Gets the current phase (v2).
+   */
+  getCurrentPhase(): string {
+    return this.graphContext.currentPhase;
+  }
+
+  /**
+   * Gets completed phases (v2).
+   */
+  getCompletedPhases(): string[] {
+    return [...this.graphContext.completedPhases];
+  }
+
+  /**
+   * Gets a full snapshot of the graph state (v2).
+   */
+  getSnapshot(): Record<string, unknown> {
+    return this.graphContext.getSnapshot();
   }
 
   /**
@@ -119,6 +175,18 @@ export abstract class BaseRuntimeCore {
   }
 
   /**
+   * Creates a scoped logger for extension hooks.
+   */
+  protected createHookLogger(extensionId: string): HookLogger {
+    return {
+      debug: (msg: string, ...args: unknown[]) => this.logger.debug(`[${extensionId}] ${msg}`, ...args),
+      info: (msg: string, ...args: unknown[]) => this.logger.info(`[${extensionId}] ${msg}`, ...args),
+      warn: (msg: string, ...args: unknown[]) => this.logger.warn(`[${extensionId}] ${msg}`, ...args),
+      error: (msg: string, ...args: unknown[]) => this.logger.error(`[${extensionId}] ${msg}`, ...args),
+    };
+  }
+
+  /**
    * Processes signals in the queue sequentially.
    * Subclasses should implement signal routing logic.
    */
@@ -146,8 +214,14 @@ export abstract class BaseRuntimeCore {
   }
 
   /**
-   * Processes a single signal.
-   * Subclasses should implement the actual signal routing and node processing.
+   * Processes a single signal through the v2 middleware pipeline.
+   *
+   * Pipeline order:
+   * 1. onRoute hooks (guard, phase check, rate-limit, etc.)
+   * 2. onBeforeProcess hooks (timeout start, transform)
+   * 3. node.process()
+   * 4. onAfterProcess hooks (phase advance, timeout clear)
+   * 5. onError hooks (retry, compensation) — only if process throws
    */
   protected abstract processSignal(signal: Signal): Promise<void>;
 

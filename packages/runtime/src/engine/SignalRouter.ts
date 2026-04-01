@@ -1,9 +1,9 @@
 /**
  * SignalRouter - Routes signals between nodes based on wire definitions
- * 
- * The SignalRouter determines which nodes should receive a signal
- * based on the wire connections defined in the cartridge.
- * 
+ *
+ * v2: Phase-aware routing. When currentPhase is provided, only wires
+ * in that phase (or wires without a phase) are active.
+ *
  * @module @graph-os/runtime
  */
 
@@ -17,7 +17,9 @@ interface WireConnection {
   fromNodeId: string;
   toNodeId: string;
   signalType: string;
+  phase?: string;
   targetNode: Node;
+  wire: WireDefinition;
 }
 
 /**
@@ -51,7 +53,9 @@ export class SignalRouter {
         fromNodeId: wire.from,
         toNodeId: wire.to,
         signalType: wire.signalType,
+        phase: wire.phase,
         targetNode,
+        wire,
       };
 
       this.connections.push(connection);
@@ -77,8 +81,15 @@ export class SignalRouter {
 
   /**
    * Finds all target nodes for a signal with O(1) lookup.
+   *
+   * v2: If currentPhase is provided, filters connections by phase.
+   * Wires without a phase are always active (backward compatible).
+   *
+   * @param signal - The signal to route
+   * @param currentPhase - Optional current phase for filtering (v2)
+   * @returns Array of matching connections with target node and wire definition
    */
-  findTargets(signal: Signal): Node[] {
+  findTargets(signal: Signal, currentPhase?: string): Node[] {
     const sourceIndex = this.index.get(signal.sourceNodeId);
     if (!sourceIndex) return [];
 
@@ -88,7 +99,9 @@ export class SignalRouter {
     const typeMatches = sourceIndex.get(signal.type);
     if (typeMatches) {
       for (const conn of typeMatches) {
-        targets.add(conn.targetNode);
+        if (this.isConnectionActive(conn, currentPhase)) {
+          targets.add(conn.targetNode);
+        }
       }
     }
 
@@ -96,7 +109,9 @@ export class SignalRouter {
     const wildcardMatches = sourceIndex.get('*');
     if (wildcardMatches) {
       for (const conn of wildcardMatches) {
-        targets.add(conn.targetNode);
+        if (this.isConnectionActive(conn, currentPhase)) {
+          targets.add(conn.targetNode);
+        }
       }
     }
 
@@ -104,11 +119,53 @@ export class SignalRouter {
   }
 
   /**
+   * Find all matching connections (with wire definitions) for a signal.
+   * Used by the pipeline to get wire context for each target.
+   *
+   * @param signal - The signal to route
+   * @param currentPhase - Optional current phase for filtering
+   * @returns Array of matching connections
+   */
+  findConnections(signal: Signal, currentPhase?: string): WireConnection[] {
+    const sourceIndex = this.index.get(signal.sourceNodeId);
+    if (!sourceIndex) return [];
+
+    const results: WireConnection[] = [];
+
+    const addMatches = (matches: WireConnection[] | undefined) => {
+      if (!matches) return;
+      for (const conn of matches) {
+        if (this.isConnectionActive(conn, currentPhase)) {
+          results.push(conn);
+        }
+      }
+    };
+
+    addMatches(sourceIndex.get(signal.type));
+    addMatches(sourceIndex.get('*'));
+
+    return results;
+  }
+
+  /**
+   * Check if a connection is active given the current phase.
+   * Wires without a phase are always active.
+   */
+  private isConnectionActive(conn: WireConnection, currentPhase?: string): boolean {
+    // No phase on wire = always active (v1 backward compatible)
+    if (!conn.phase) return true;
+    // No phase tracking = all wires active
+    if (currentPhase === undefined) return true;
+    // Phase must match
+    return conn.phase === currentPhase;
+  }
+
+  /**
    * Finds all connections for a specific signal type.
    */
   findBySignalType(signalType: string): WireConnection[] {
     return this.connections.filter(
-      conn => conn.signalType === signalType || conn.signalType === '*'
+      conn => conn.signalType === signalType || conn.signalType === '*',
     );
   }
 
